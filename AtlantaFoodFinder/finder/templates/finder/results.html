@@ -1,0 +1,35 @@
+{% extends 'finder/base.html' %}
+
+{% block content %}
+<h1>Nearby Restaurants</h1>
+<div id="map"></div>
+<ul id="restaurant-list"></ul>
+
+<script>
+function initMap() {
+    const [lat, lng] = '{{ location }}'.split(',');
+    const center = { lat: parseFloat(lat), lng: parseFloat(lng) };
+    const map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 14,
+        center: center
+    });
+
+    const restaurants = {{ results|safe }};
+    const listElement = document.getElementById('restaurant-list');
+
+    restaurants.forEach(restaurant => {
+        const marker = new google.maps.Marker({
+            position: restaurant.geometry.location,
+            map: map,
+            title: restaurant.name
+        });
+
+        const listItem = document.createElement('li');
+        listItem.textContent = `${restaurant.name} - Rating: ${restaurant.rating || 'N/A'}`;
+        listElement.appendChild(listItem);
+    });
+}
+
+initMap();
+</script>
+{% endblock %}
