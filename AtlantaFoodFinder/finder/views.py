@@ -1,12 +1,15 @@
 import requests
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.conf import settings
+from django.views.decorators.cache import cache_control
 
 
 def home(request):
     return render(request, 'finder/home.html')
 
-
+@login_required(login_url='my-login')
+@cache_control(no_cache = True, must_revalidate = True, no_store = True)
 def search(request):
     if request.method == 'POST':
         location = request.POST.get('location', '')
