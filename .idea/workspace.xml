@@ -5,8 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6ce0dd09-477a-499a-bae7-5f9bdacad7cd" name="Changes" comment="first commit for home page, test push on 9/17/2024">
-      <change afterPath="$PROJECT_DIR$/AtlantaFoodFinder/homePage/hello.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AtlantaFoodFinder/homePage/forms.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AtlantaFoodFinder/homePage/static/css/home.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AtlantaFoodFinder/homePage/static/css/login.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AtlantaFoodFinder/homePage/static/css/register.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AtlantaFoodFinder/homePage/templates/homePage/dashboard.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AtlantaFoodFinder/homePage/templates/homePage/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AtlantaFoodFinder/homePage/templates/homePage/my_login.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AtlantaFoodFinder/homePage/templates/homePage/register.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/AtlantaFoodFinder.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/AtlantaFoodFinder.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AtlantaFoodFinder/AtlantaFoodFinder/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/AtlantaFoodFinder/AtlantaFoodFinder/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AtlantaFoodFinder/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/AtlantaFoodFinder/db.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AtlantaFoodFinder/homePage/hello.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AtlantaFoodFinder/homePage/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/AtlantaFoodFinder/homePage/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AtlantaFoodFinder/homePage/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/AtlantaFoodFinder/homePage/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,38 +31,80 @@
       <option value="directory" />
     </option>
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="HTML File" />
+        <option value="Python Script" />
+        <option value="CSS File" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="UPDATE_TYPE" value="REBASE" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "history": [
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;history&quot;: [
     {
-      "state": "OPEN",
-      "author": "eshan1jaffar"
+      &quot;state&quot;: &quot;OPEN&quot;,
+      &quot;author&quot;: &quot;eshan1jaffar&quot;
     }
   ],
-  "lastFilter": {
-    "state": "OPEN",
-    "author": "eshan1jaffar"
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;author&quot;: &quot;eshan1jaffar&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/PranavEega/AtlantaFoodFinder.git",
-    "accountId": "9c198e46-08e7-49dc-98c8-3c4789907df6"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/PranavEega/AtlantaFoodFinder.git&quot;,
+    &quot;accountId&quot;: &quot;9c198e46-08e7-49dc-98c8-3c4789907df6&quot;
   }
-}]]></component>
+}</component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="2mCs2vZMSuDbalhslREri9WnLDh" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "JavaScript Debug.homePage.html.executor": "Run",
+    "Python.manage.executor": "Run",
+    "Python.urls.executor": "Run",
+    "RunOnceActivity.OpenDjangoStructureViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
-    "node.js.selected.package.tslint": "(autodetect)"
+    "list.type.of.created.stylesheet": "CSS",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Roohi\AtlantaFoodFinder\AtlantaFoodFinder\homePage\static\css" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-7c0b70fcd90d-JavaScript-PY-242.21829.153" />
+        <option value="bundled-python-sdk-464836ebc622-b74155a9e76b-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-242.21829.153" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task id="LOCAL-00001" summary="first commit for home page, test push on 9/17/2024">
       <option name="closed" value="true" />
@@ -67,11 +122,36 @@
       <option name="project" value="LOCAL" />
       <updated>1726590337280</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="first commit for home page, test push on 9/17/2024">
+      <option name="closed" value="true" />
+      <created>1726590873404</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1726590873404</updated>
+    </task>
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="6ce0dd09-477a-499a-bae7-5f9bdacad7cd" name="Changes" comment="first commit for home page, test push on 9/17/2024" />
+      <created>1726591688352</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1726591688352</updated>
+      <workItem from="1726591689506" duration="7399000" />
+      <workItem from="1726797866026" duration="5846000" />
+      <workItem from="1727109584401" duration="4271000" />
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="first commit for home page, test push on 9/17/2024" />
     <option name="LAST_COMMIT_MESSAGE" value="first commit for home page, test push on 9/17/2024" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/AtlantaFoodFinder$manage.coverage" NAME="manage Coverage Results" MODIFIED="1726591812700" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/AtlantaFoodFinder" />
+    <SUITE FILE_PATH="coverage/AtlantaFoodFinder$urls.coverage" NAME="urls Coverage Results" MODIFIED="1726689269147" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/AtlantaFoodFinder/homePage" />
   </component>
 </project>
