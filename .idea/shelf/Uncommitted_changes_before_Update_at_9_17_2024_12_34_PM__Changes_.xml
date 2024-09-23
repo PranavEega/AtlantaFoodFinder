@@ -1,0 +1,8 @@
+<changelist name="Uncommitted_changes_before_Update_at_9_17_2024_12_34_PM_[Changes]" date="1726590901173" recycled="false" toDelete="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_9_17_2024_12_34_PM_[Changes]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Update at 9/17/2024 12:34 PM [Changes]" />
+  <binary>
+    <option name="AFTER_PATH" value="AtlantaFoodFinder/db.sqlite3" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_9_17_2024_12_34_PM_[Changes]/db.sqlite3" />
+  </binary>
+</changelist>
