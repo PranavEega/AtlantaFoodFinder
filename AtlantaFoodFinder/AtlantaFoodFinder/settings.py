@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-GOOGLE_MAPS_API_KEY = 'AIzaSyD5DDmYusyw_yveKFGF3kVXjN_qDWXjk_4'
+GOOGLE_MAPS_API_KEY = 'AIzaSyDL_c5ZXIdrheexPbzzD3lPuYJGDZFVSTM'
 
 # Application definition
 
@@ -109,7 +109,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'EST'
 
 USE_I18N = True
 

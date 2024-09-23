@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="/static/css/login.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Sign In</h1>
+        <form method="POST" autocomplete="on">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ loginform.as_p }}
+            </div>
+            <button type="submit" class="button">Login</button>
+        </form>
+        <p class="signup-link">Don't have an account? <a href="register">Register here</a></p>
+    </div>
+</body>
+</html>
