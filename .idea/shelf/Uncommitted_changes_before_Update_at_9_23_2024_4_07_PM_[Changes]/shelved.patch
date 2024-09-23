@@ -1,0 +1,110 @@
+Index: AtlantaFoodFinder/homePage/views.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from functools import cache\r\n\r\nfrom django.shortcuts import render, redirect\r\n\r\nfrom . forms import UserRegistrationForm, UserLoginForm\r\n\r\n#Authetication models and functions\r\n\r\nfrom django.contrib.auth.models import auth\r\nfrom django.contrib.auth import authenticate, login, logout\r\nfrom django.contrib.auth.decorators import login_required\r\nfrom django.views.decorators.cache import cache_control\r\n\r\n\r\n# Create your views here.\r\n\r\ndef home(request):\r\n    return render(request, 'homePage/index.html')\r\n\r\ndef register(request):\r\n\r\n    form = UserRegistrationForm()\r\n\r\n    if request.method == 'POST':\r\n\r\n        form = UserRegistrationForm(request.POST)\r\n\r\n        if form.is_valid():\r\n            form.save()\r\n\r\n            return redirect('/my-login')\r\n\r\n    context = {'registerform': form}\r\n\r\n    return render(request, \"homePage/register.html\", context = context)\r\n\r\ndef my_login(request):\r\n\r\n    form = UserLoginForm()\r\n    if request.method == 'POST':\r\n        form = UserLoginForm(request, data=request.POST)\r\n\r\n        if form.is_valid():\r\n            username = request.POST.get('username')\r\n            password = request.POST.get('password')\r\n\r\n            user = authenticate(request, username=username, password=password)\r\n\r\n            if user is not None:\r\n\r\n                auth.login(request, user)\r\n\r\n                return redirect('/dashboard')\r\n\r\n    context = {'loginform': form}\r\n\r\n    return render(request, \"homePage/my_login.html\", context = context)\r\n\r\n@login_required(login_url='my-login')\r\n@cache_control(no_cache = True, must_revalidate = True, no_store = True)\r\ndef dashboard(request):\r\n    return render(request, \"homePage/dashboard.html\")\r\n\r\ndef user_logout(request):\r\n    logout(request)\r\n    return redirect('home')\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/AtlantaFoodFinder/homePage/views.py b/AtlantaFoodFinder/homePage/views.py
+--- a/AtlantaFoodFinder/homePage/views.py	(revision e3086e599977b955a8227bd243f7822187a21767)
++++ b/AtlantaFoodFinder/homePage/views.py	(date 1727121702700)
+@@ -50,7 +50,7 @@
+ 
+                 auth.login(request, user)
+ 
+-                return redirect('/dashboard')
++                return redirect('/search')
+ 
+     context = {'loginform': form}
+ 
+Index: AtlantaFoodFinder/finder/views.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import requests\r\nfrom django.shortcuts import render\r\nfrom django.conf import settings\r\n\r\n\r\ndef home(request):\r\n    return render(request, 'finder/home.html')\r\n\r\n\r\ndef search(request):\r\n    if request.method == 'POST':\r\n        location = request.POST.get('location', '')\r\n        radius = request.POST.get('radius', 1000)  # Default to 1000 meters\r\n\r\n        # Use Google Places API to search for nearby restaurants\r\n        url = f\"https://maps.googleapis.com/maps/api/place/nearbysearch/json\"\r\n        params = {\r\n            'location': location,\r\n            'radius': radius,\r\n            'type': 'restaurant',\r\n            'key': settings.GOOGLE_MAPS_API_KEY\r\n        }\r\n\r\n        response = requests.get(url, params=params)\r\n        results = response.json().get('results', [])\r\n\r\n        context = {\r\n            'results': results,\r\n            'api_key': settings.GOOGLE_MAPS_API_KEY,\r\n            'location': location,\r\n        }\r\n        return render(request, 'finder/results.html', context)\r\n\r\n    return render(request, 'finder/home.html')\r\n\r\n\r\nfrom django.shortcuts import render\r\n\r\n# Create your views here.\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/AtlantaFoodFinder/finder/views.py b/AtlantaFoodFinder/finder/views.py
+--- a/AtlantaFoodFinder/finder/views.py	(revision e3086e599977b955a8227bd243f7822187a21767)
++++ b/AtlantaFoodFinder/finder/views.py	(date 1727121915942)
+@@ -1,12 +1,14 @@
+ import requests
+ from django.shortcuts import render
+ from django.conf import settings
+-
++from django.contrib.auth.decorators import login_required
++from django.views.decorators.cache import cache_control
+ 
+ def home(request):
+     return render(request, 'finder/home.html')
+ 
+-
++@login_required(login_url='search')
++@cache_control(no_cache = True, must_revalidate = True, no_store = True)
+ def search(request):
+     if request.method == 'POST':
+         location = request.POST.get('location', '')
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"6ce0dd09-477a-499a-bae7-5f9bdacad7cd\" name=\"Changes\" comment=\"first commit for home page, test push on 9/17/2024\" />\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"ChangesViewManager\">\r\n    <option name=\"groupingKeys\">\r\n      <option value=\"directory\" />\r\n    </option>\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"HTML File\" />\r\n        <option value=\"Python Script\" />\r\n        <option value=\"CSS File\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n    <option name=\"UPDATE_TYPE\" value=\"REBASE\" />\r\n  </component>\r\n  <component name=\"GitHubPullRequestSearchHistory\">{\r\n  &quot;history&quot;: [\r\n    {\r\n      &quot;state&quot;: &quot;OPEN&quot;,\r\n      &quot;author&quot;: &quot;eshan1jaffar&quot;\r\n    }\r\n  ],\r\n  &quot;lastFilter&quot;: {\r\n    &quot;state&quot;: &quot;OPEN&quot;,\r\n    &quot;author&quot;: &quot;eshan1jaffar&quot;\r\n  }\r\n}</component>\r\n  <component name=\"GithubPullRequestsUISettings\">{\r\n  &quot;selectedUrlAndAccountId&quot;: {\r\n    &quot;url&quot;: &quot;https://github.com/PranavEega/AtlantaFoodFinder.git&quot;,\r\n    &quot;accountId&quot;: &quot;9c198e46-08e7-49dc-98c8-3c4789907df6&quot;\r\n  }\r\n}</component>\r\n  <component name=\"ProblemsViewState\">\r\n    <option name=\"selectedTabId\" value=\"CurrentFile\" />\r\n  </component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;associatedIndex&quot;: 8\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"2mCs2vZMSuDbalhslREri9WnLDh\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">{\r\n  &quot;keyToString&quot;: {\r\n    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,\r\n    &quot;JavaScript Debug.homePage.html.executor&quot;: &quot;Run&quot;,\r\n    &quot;Python.manage.executor&quot;: &quot;Run&quot;,\r\n    &quot;Python.urls.executor&quot;: &quot;Run&quot;,\r\n    &quot;RunOnceActivity.OpenDjangoStructureViewOnStart&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\r\n    &quot;git-widget-placeholder&quot;: &quot;main&quot;,\r\n    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,\r\n    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,\r\n    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,\r\n    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,\r\n    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,\r\n    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;\r\n  }\r\n}</component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"MoveFile.RECENT_KEYS\">\r\n      <recent name=\"C:\\Users\\Roohi\\AtlantaFoodFinder\\AtlantaFoodFinder\\homePage\\static\\css\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"SharedIndexes\">\r\n    <attachedChunks>\r\n      <set>\r\n        <option value=\"bundled-js-predefined-d6986cc7102b-7c0b70fcd90d-JavaScript-PY-242.21829.153\" />\r\n        <option value=\"bundled-python-sdk-464836ebc622-b74155a9e76b-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-242.21829.153\" />\r\n      </set>\r\n    </attachedChunks>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task id=\"LOCAL-00001\" summary=\"first commit for home page, test push on 9/17/2024\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1726590220058</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1726590220058</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"first commit for home page, test push on 9/17/2024\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1726590337280</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1726590337280</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00003\" summary=\"first commit for home page, test push on 9/17/2024\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1726590873404</created>\r\n      <option name=\"number\" value=\"00003\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1726590873404</updated>\r\n    </task>\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"6ce0dd09-477a-499a-bae7-5f9bdacad7cd\" name=\"Changes\" comment=\"first commit for home page, test push on 9/17/2024\" />\r\n      <created>1726591688352</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1726591688352</updated>\r\n      <workItem from=\"1726591689506\" duration=\"7399000\" />\r\n      <workItem from=\"1726797866026\" duration=\"5846000\" />\r\n      <workItem from=\"1727109584401\" duration=\"4271000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00004\" summary=\"first commit for home page, test push on 9/17/2024\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1727121082683</created>\r\n      <option name=\"number\" value=\"00004\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1727121082683</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00005\" summary=\"first commit for home page, test push on 9/17/2024\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1727121109370</created>\r\n      <option name=\"number\" value=\"00005\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00005\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1727121109370</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00006\" summary=\"first commit for home page, test push on 9/17/2024\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1727121112251</created>\r\n      <option name=\"number\" value=\"00006\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00006\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1727121112251</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00007\" summary=\"first commit for home page, test push on 9/17/2024\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1727121190591</created>\r\n      <option name=\"number\" value=\"00007\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00007\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1727121190591</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"8\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"first commit for home page, test push on 9/17/2024\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"first commit for home page, test push on 9/17/2024\" />\r\n  </component>\r\n  <component name=\"com.intellij.coverage.CoverageDataManagerImpl\">\r\n    <SUITE FILE_PATH=\"coverage/AtlantaFoodFinder$manage.coverage\" NAME=\"manage Coverage Results\" MODIFIED=\"1726591812700\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$/AtlantaFoodFinder\" />\r\n    <SUITE FILE_PATH=\"coverage/AtlantaFoodFinder$urls.coverage\" NAME=\"urls Coverage Results\" MODIFIED=\"1726689269147\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$/AtlantaFoodFinder/homePage\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision e3086e599977b955a8227bd243f7822187a21767)
++++ b/.idea/workspace.xml	(date 1727121916073)
+@@ -4,7 +4,12 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="6ce0dd09-477a-499a-bae7-5f9bdacad7cd" name="Changes" comment="first commit for home page, test push on 9/17/2024" />
++    <list default="true" id="6ce0dd09-477a-499a-bae7-5f9bdacad7cd" name="Changes" comment="first commit for home page, test push on 9/17/2024">
++      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/AtlantaFoodFinder/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/AtlantaFoodFinder/db.sqlite3" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/AtlantaFoodFinder/finder/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/AtlantaFoodFinder/finder/views.py" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/AtlantaFoodFinder/homePage/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/AtlantaFoodFinder/homePage/views.py" afterDir="false" />
++    </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+@@ -26,7 +31,6 @@
+   </component>
+   <component name="Git.Settings">
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+-    <option name="UPDATE_TYPE" value="REBASE" />
+   </component>
+   <component name="GitHubPullRequestSearchHistory">{
+   &quot;history&quot;: [
+@@ -156,11 +160,30 @@
+       <option name="project" value="LOCAL" />
+       <updated>1727121190591</updated>
+     </task>
+-    <option name="localTasksCounter" value="8" />
++    <task id="LOCAL-00008" summary="first commit for home page, test push on 9/17/2024">
++      <option name="closed" value="true" />
++      <created>1727121537651</created>
++      <option name="number" value="00008" />
++      <option name="presentableId" value="LOCAL-00008" />
++      <option name="project" value="LOCAL" />
++      <updated>1727121537651</updated>
++    </task>
++    <option name="localTasksCounter" value="9" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
+     <option name="version" value="3" />
++  </component>
++  <component name="Vcs.Log.Tabs.Properties">
++    <option name="TAB_STATES">
++      <map>
++        <entry key="MAIN">
++          <value>
++            <State />
++          </value>
++        </entry>
++      </map>
++    </option>
+   </component>
+   <component name="VcsManagerConfiguration">
+     <MESSAGE value="first commit for home page, test push on 9/17/2024" />
