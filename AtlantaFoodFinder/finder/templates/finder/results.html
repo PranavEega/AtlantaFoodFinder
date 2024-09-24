@@ -150,15 +150,20 @@
 
         markers.push(marker);
 
+        // Modify here to include "Get Directions" hyperlink
         google.maps.event.addListener(marker, 'click', () => {
+          const directionsUrl = `https://www.google.com/maps/dir/?api=1&origin=${userLocation.lat},${userLocation.lng}&destination=${restaurant.geometry.location.lat()},${restaurant.geometry.location.lng()}`;
+
           const contentString = `
             <div>
               <h2>${restaurant.name}</h2>
               <p>Rating: ${rating}</p>
               <p>Distance: ${distance.toFixed(2)} km</p>
               <p>Address: ${restaurant.vicinity}</p>
+              <a href="${directionsUrl}" target="_blank">Get Directions</a>
             </div>
             <div><button onclick="marker.setIcon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png');">Add Favorite Restaurant</button></div>`;
+
           const infoWindow = new google.maps.InfoWindow({
             content: contentString
           });
