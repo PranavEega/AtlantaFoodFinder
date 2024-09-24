@@ -43,6 +43,7 @@
 
     const service = new google.maps.places.PlacesService(map);
     let markers = []; // Array to store markers
+    const infoWindow = new google.maps.InfoWindow(); // Create an InfoWindow
 
     // Function to clear existing markers from the map
     const clearMarkers = () => {
@@ -73,6 +74,18 @@
             });
 
             markers.push(marker); // Store the marker
+
+            // Add click event to each marker to show InfoWindow with restaurant details
+            google.maps.event.addListener(marker, 'click', () => {
+              const contentString = `
+                <div>
+                  <h2>${restaurant.name}</h2>
+                  <p>Rating: ${restaurant.rating || 'N/A'}</p>
+                  <p>Address: ${restaurant.vicinity}</p>
+                </div>`;
+              infoWindow.setContent(contentString);
+              infoWindow.open(map, marker);
+            });
 
             const listItem = document.createElement('li');
             listItem.textContent = `${restaurant.name} - Rating: ${restaurant.rating || 'N/A'}`;
