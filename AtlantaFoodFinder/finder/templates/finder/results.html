@@ -2,6 +2,10 @@
 
 {% block content %}
 
+<div>
+  <input type="text" id="search-input" placeholder="Search for restaurants by name, location, or cuisine" />
+  <button id="search-button">Search</button>
+</div>
 <div id="map" style="height: 700px; width: 100%;"></div>
 <ul id="restaurant-list"></ul>
 
@@ -22,6 +26,8 @@
     }));
     d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n));
   })({
+    key: "YOUR_API_KEY", // Replace with your actual Google Maps API key
+    v: "weekly",
   });
 
   async function initMap() {
@@ -36,29 +42,52 @@
     });
 
     const service = new google.maps.places.PlacesService(map);
-    const request = {
-      location: center,
-      radius: '20000', // Search within 500 meters
-      type: ['restaurant'],
+    let markers = []; // Array to store markers
+
+    // Function to clear existing markers from the map
+    const clearMarkers = () => {
+      markers.forEach(marker => marker.setMap(null)); // Remove each marker from the map
+      markers = []; // Clear the markers array
     };
 
-    service.nearbySearch(request, (results, status) => {
-      if (status === google.maps.places.PlacesServiceStatus.OK) {
-        const listElement = document.getElementById('restaurant-list');
-        results.forEach(restaurant => {
-          const marker = new Marker({
-            position: restaurant.geometry.location,
-            map: map,
-            title: restaurant.name
-          });
+    // Function to search for restaurants
+    const searchRestaurants = (query) => {
+      const request = {
+        location: center,
+        radius: '20000', // Search within 20 km
+        type: ['restaurant'],
+        keyword: query // Using keyword for searching
+      };
 
-          const listItem = document.createElement('li');
-          //listItem.textContent = `${restaurant.name} - Rating: ${restaurant.rating || 'N/A'}`;
-          //listElement.appendChild(listItem);
-        });
-      } else {
-        console.error('Error fetching restaurants: ', status);
-      }
+      service.nearbySearch(request, (results, status) => {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+          const listElement = document.getElementById('restaurant-list');
+          listElement.innerHTML = ''; // Clear previous results
+          clearMarkers(); // Clear existing markers before adding new ones
+
+          results.forEach(restaurant => {
+            const marker = new Marker({
+              position: restaurant.geometry.location,
+              map: map,
+              title: restaurant.name
+            });
+
+            markers.push(marker); // Store the marker
+
+            const listItem = document.createElement('li');
+            listItem.textContent = `${restaurant.name} - Rating: ${restaurant.rating || 'N/A'}`;
+            listElement.appendChild(listItem);
+          });
+        } else {
+          console.error('Error fetching restaurants: ', status);
+        }
+      });
+    };
+
+    // Event listener for search button
+    document.getElementById('search-button').addEventListener('click', () => {
+      const query = document.getElementById('search-input').value;
+      searchRestaurants(query); // Call search function with the input value
     });
   }
 
