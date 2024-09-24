@@ -157,7 +157,8 @@
               <p>Rating: ${rating}</p>
               <p>Distance: ${distance.toFixed(2)} km</p>
               <p>Address: ${restaurant.vicinity}</p>
-            </div>`;
+            </div>
+            <div><button onclick="marker.setIcon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png');">Add Favorite Restaurant</button></div>`;
           const infoWindow = new google.maps.InfoWindow({
             content: contentString
           });
