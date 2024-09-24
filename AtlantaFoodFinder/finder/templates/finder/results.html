@@ -32,6 +32,7 @@
   let service;
   let markers = [];
   let userLocation = { lat: 33.7490, lng: -84.3880 }; // Default to Atlanta
+  let userLocationMarker; // Variable to store user's location marker
 
   // Load the Google Maps API dynamically with error handling
   function loadGoogleMapsAPI() {
@@ -60,11 +61,13 @@
         () => {
           // Fallback if the user denies location access
           createMap(userLocation); // Use default location (Atlanta)
+          displayUserLocationMarker(userLocation);  // Display a marker for the default location
         }
       );
     } else {
       // Browser does not support geolocation
       createMap(userLocation);
+      displayUserLocationMarker(userLocation);  // Display a marker for the default location
     }
   }
 
@@ -78,15 +81,22 @@
     service = new google.maps.places.PlacesService(map);
   }
 
-  // Function to clear existing markers
+  // Function to clear existing markers (except user location marker)
   function clearMarkers() {
-    markers.forEach(marker => marker.setMap(null));
-    markers = [];
+    markers.forEach(marker => {
+      if (marker !== userLocationMarker) { // Ensure the user location marker is not cleared
+        marker.setMap(null);
+      }
+    });
+    markers = markers.filter(marker => marker === userLocationMarker); // Retain only the user location marker
   }
 
   // Function to display a marker for the user's current location
   function displayUserLocationMarker(location) {
-    const marker = new google.maps.Marker({
+    if (userLocationMarker) {
+      userLocationMarker.setMap(null); // Remove the previous marker if it exists
+    }
+    userLocationMarker = new google.maps.Marker({
       position: location,
       map: map,
       title: 'Your Location',
@@ -94,7 +104,7 @@
         url: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'  // Use a blue dot icon for user location
       }
     });
-    markers.push(marker);
+    markers.push(userLocationMarker);
 
     // Center the map on the user's location
     map.setCenter(location);
