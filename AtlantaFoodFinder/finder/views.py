@@ -10,18 +10,19 @@ from django.views.decorators.cache import cache_control
 def home(request):
     return render(request, 'finder/home.html')
 
+'''
 @login_required(login_url='my-login')
 @cache_control(no_cache = True, must_revalidate = True, no_store = True)
+
+'''
 def search(request):
     if request.method == 'POST':
         location = '33.7488, -84.3877'
-        radius = 1000# Default to 1000 meters
 
         # Use Google Places API to search for nearby restaurants
         url = f"https://maps.googleapis.com/maps/api/place/nearbysearch/json"
         params = {
             'location': location,
-            'radius': radius,
             'type': 'restaurant',
             'key': settings.GOOGLE_MAPS_API_KEY
         }

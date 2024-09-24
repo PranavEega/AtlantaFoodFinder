@@ -2,53 +2,67 @@
 
 {% block content %}
 
-<div id="map"></div>
+<div id="map" style="height: 700px; width: 100%;"></div>
 <ul id="restaurant-list"></ul>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDL_c5ZXIdrheexPbzzD3lPuYJGDZFVSTM&libraries=geometry&callback=initMap" async defer></script>
 <script>
-  (g=>{let h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
-    key: "AIzaSyDL_c5ZXIdrheexPbzzD3lPuYJGDZFVSTM",
-    v: "weekly",
-    // Use the 'v' parameter to indicate the version to use (weekly, beta, alpha, etc.).
-    // Add other bootstrap parameters as needed, using camel case.
+  (g => {
+    let h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__", m = document, b = window;
+    b = b[c] || (b[c] = {});
+    var d = b.maps || (b.maps = {}), r = new Set(), e = new URLSearchParams(), u = () => h || (h = new Promise(async (f, n) => {
+      await (a = m.createElement("script"));
+      e.set("libraries", [...r] + "");
+      for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]);
+      e.set("callback", c + ".maps." + q);
+      a.src = `https://maps.${c}apis.com/maps/api/js?` + e;
+      d[q] = f;
+      a.onerror = () => h = n(Error(p + " could not load."));
+      a.nonce = m.querySelector("script[nonce]")?.nonce || "";
+      m.head.append(a);
+    }));
+    d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n));
+  })({
   });
 
-
-
-async function initMap() {
+  async function initMap() {
     const [lat, lng] = '{{ location }}'.split(',');
     const center = { lat: parseFloat(lat), lng: parseFloat(lng) };
 
     const { Map } = await google.maps.importLibrary("maps");
     const { Marker } = await google.maps.importLibrary("marker");
     const map = new Map(document.getElementById('map'), {
-        zoom: 10,
-        center: center
+      zoom: 12,
+      center: center
     });
 
-    const restaurants = {{ results|safe }};
-    if (restaurants.length > 0) {
-        console.log("Restaurants array has elements.");
-    } else {
-        console.log("Restaurants array is empty.");
-    }
-    const listElement = document.getElementById('restaurant-list');
-    restaurants.forEach(restaurant => {
-        const marker = new Marker({
+    const service = new google.maps.places.PlacesService(map);
+    const request = {
+      location: center,
+      radius: '20000', // Search within 500 meters
+      type: ['restaurant'],
+    };
+
+    service.nearbySearch(request, (results, status) => {
+      if (status === google.maps.places.PlacesServiceStatus.OK) {
+        const listElement = document.getElementById('restaurant-list');
+        results.forEach(restaurant => {
+          const marker = new Marker({
             position: restaurant.geometry.location,
             map: map,
             title: restaurant.name
+          });
+
+          const listItem = document.createElement('li');
+          //listItem.textContent = `${restaurant.name} - Rating: ${restaurant.rating || 'N/A'}`;
+          //listElement.appendChild(listItem);
         });
-
-        const listItem = document.createElement('li');
-        listItem.textContent = `${restaurant.name} - Rating: ${restaurant.rating || 'N/A'}`;
-        listElement.appendChild(listItem);
+      } else {
+        console.error('Error fetching restaurants: ', status);
+      }
     });
-}
+  }
 
-initMap();
+  initMap();
 </script>
-    <h1>"fdjslafd"</h1>
-    <ul id="restaurant-list"></ul>
+
 {% endblock %}
