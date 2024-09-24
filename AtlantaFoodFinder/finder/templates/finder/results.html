@@ -169,9 +169,70 @@
           });
           infoWindow.open(map, marker);
         });
+function inferCuisineType(restaurantName) {
+        const cuisineKeywords = {
+  // European Cuisines
+  'Italian': ['pasta', 'pizza', 'italian', 'lasagna', 'spaghetti', 'risotto', 'gnocchi', 'ravioli', 'carbonara', 'bruschetta', 'antipasto'],
+  'French': ['baguette', 'croissant', 'crepe', 'souffle', 'ratatouille', 'escargot', 'coq au vin', 'quiche', 'bouillabaisse', 'french'],
+  'Spanish': ['paella', 'tapas', 'churro', 'gazpacho', 'jamon', 'tortilla', 'patatas bravas', 'sangria', 'iberico', 'spanish'],
+  'Greek': ['gyros', 'souvlaki', 'moussaka', 'tzatziki', 'spanakopita', 'baklava', 'greek', 'dolma'],
+  'German': ['bratwurst', 'schnitzel', 'pretzel', 'sauerkraut', 'strudel', 'spätzle', 'german'],
+  'British': ['fish and chips', 'shepherd\'s pie', 'bangers and mash', 'yorkshire pudding', 'british', 'crumpet', 'roast beef'],
+  
+  // Asian Cuisines
+  'Japanese': ['sushi', 'ramen', 'tempura', 'yakitori', 'sashimi', 'udon', 'teriyaki', 'miso', 'teppanyaki', 'katsu', 'japanese'],
+  'Chinese': ['noodle', 'dim sum', 'wonton', 'sweet and sour', 'kung pao', 'peking duck', 'chow mein', 'spring roll', 'dumpling', 'szechuan', 'chinese'],
+  'Korean': ['kimchi', 'bibimbap', 'bulgogi', 'kimbap', 'japchae', 'soju', 'korean bbq', 'korean'],
+  'Thai': ['pad thai', 'green curry', 'tom yum', 'massaman curry', 'thai', 'som tam', 'satay', 'pad see ew', 'larb'],
+  'Indian': ['curry', 'tandoori', 'biryani', 'naan', 'samosa', 'vindaloo', 'masala', 'dosa', 'rogan josh', 'butter chicken', 'paneer', 'indian'],
+  'Vietnamese': ['pho', 'banh mi', 'spring roll', 'bun cha', 'vietnamese', 'pho ga', 'com tam'],
+  'Filipino': ['adobo', 'sinangag', 'lumpia', 'lechon', 'kare-kare', 'filipino', 'sisig', 'halo-halo'],
+
+  // Middle Eastern & Mediterranean Cuisines
+  'Turkish': ['kebab', 'baklava', 'dolma', 'lahmacun', 'turkish', 'pide', 'kofte', 'borek'],
+  'Lebanese': ['hummus', 'falafel', 'tabbouleh', 'shawarma', 'baklava', 'lebanese', 'manakish', 'fattoush'],
+  'Israeli': ['shakshuka', 'falafel', 'sabich', 'hummus', 'israeli', 'bourekas', 'shawarma'],
+  'Moroccan': ['tagine', 'couscous', 'harira', 'pastilla', 'moroccan', 'kefta'],
+
+  // Latin American Cuisines
+  'Mexican': ['taco', 'burrito', 'enchilada', 'quesadilla', 'nachos', 'taqueria', 'tamale', 'salsa', 'guacamole', 'torta', 'fajita', 'mexican'],
+  'Brazilian': ['feijoada', 'churrasco', 'pão de queijo', 'brigadeiro', 'acarajé', 'brazilian'],
+  'Argentinian': ['empanada', 'asado', 'chimichurri', 'matambre', 'dulce de leche', 'argentinian'],
+  'Peruvian': ['ceviche', 'lomo saltado', 'aji de gallina', 'causa', 'pisco', 'peruvian'],
+
+  // African Cuisines
+  'Ethiopian': ['injera', 'doro wat', 'kitfo', 'ethiopian', 'tibs', 'berbere'],
+  'Nigerian': ['jollof rice', 'pounded yam', 'suya', 'egusi', 'nigerian', 'fufu'],
+  'Moroccan': ['tagine', 'couscous', 'harira', 'pastilla', 'moroccan', 'kefta'],
+
+  // American & Canadian
+  'American': ['burger', 'steak', 'hot dog', 'bbq', 'fried chicken', 'cheeseburger', 'pancakes', 'buffalo wings', 'apple pie', 'american'],
+  'Canadian': ['poutine', 'beaver tails', 'canadian', 'butter tart', 'tourtiere'],
+  
+  // Fusion and Mixed Cuisines
+  'Fusion': ['fusion', 'mixed cuisine', 'modern fusion', 'contemporary', 'global cuisine', 'asian fusion', 'latin fusion', 'european fusion'],
+  'Tex-Mex': ['fajitas', 'queso', 'chili con carne', 'taco', 'enchilada', 'tex-mex', 'nachos'],
+  
+  // Fast Food and Others
+  'Fast Food': ['burger', 'fries', 'fried chicken', 'sandwich', 'pizza', 'milkshake', 'fast food', 'hot dog', 'nuggets', 'combo meal'],
+  'Vegetarian': ['tofu', 'veggie burger', 'salad', 'quinoa', 'vegetarian', 'plant-based', 'vegan'],
+  'Vegan': ['vegan', 'plant-based', 'tofu', 'seitan', 'tempeh', 'veggie', 'cruelty-free'],
+};
+
+
+        restaurantName = restaurantName.toLowerCase();
+        for (const [cuisine, keywords] of Object.entries(cuisineKeywords)) {
+          for (const keyword of keywords) {
+            if (restaurantName.includes(keyword)) {
+              return cuisine;
+            }
+          }
+        }
+        return 'Other';
+      }
 
         const listItem = document.createElement('li');
-        listItem.textContent = `${restaurant.name} - Rating: ${rating} - Distance: ${distance.toFixed(2)} km`;
+        listItem.textContent = `${restaurant.name} - Rating: ${rating} - Distance: ${distance.toFixed(2)} km Cuisine: ${inferCuisineType(restaurant.name)}`;
         listElement.appendChild(listItem);
       }
     });

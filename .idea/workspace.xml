@@ -266,7 +266,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="first commit for home page, test push on 9/17/2024" />
-    <option name="LAST_COMMIT_MESSAGE" value="first commit for home page, test push on 9/17/2024" />
+    <MESSAGE value="added keywords for cuisine type" />
+    <option name="LAST_COMMIT_MESSAGE" value="added keywords for cuisine type" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/AtlantaFoodFinder$manage.coverage" NAME="manage Coverage Results" MODIFIED="1726591812700" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/AtlantaFoodFinder" />
