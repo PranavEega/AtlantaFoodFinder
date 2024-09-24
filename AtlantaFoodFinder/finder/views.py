@@ -1,3 +1,5 @@
+from unittest import result
+
 import requests
 from django.shortcuts import render
 from django.conf import settings
@@ -9,8 +11,8 @@ def home(request):
 
 def search(request):
     if request.method == 'POST':
-        location = request.POST.get('location', '')
-        radius = request.POST.get('radius', 1000)  # Default to 1000 meters
+        location = '33.7488, -84.3877'
+        radius = 1000# Default to 1000 meters
 
         # Use Google Places API to search for nearby restaurants
         url = f"https://maps.googleapis.com/maps/api/place/nearbysearch/json"
@@ -23,6 +25,7 @@ def search(request):
 
         response = requests.get(url, params=params)
         results = response.json().get('results', [])
+
 
         context = {
             'results': results,

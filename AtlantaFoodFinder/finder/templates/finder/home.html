@@ -1,11 +1,20 @@
 {% extends 'finder/base.html' %}
 
 {% block content %}
-<h1>Restaurant Finder</h1>
-<form action="{% url 'search' %}" method="post">
+<h1>GENERATING RESTAURANTS</h1>
+<form id = "restaurant-form" action="{% url 'search' %}" method="post">
     {% csrf_token %}
-    <input type="text" name="location" placeholder="Enter location (e.g., latitude,longitude)" required>
-    <input type="number" name="radius" placeholder="Search radius in meters" value="1000">
-    <button type="submit">Search</button>
+
 </form>
+    <script>
+    // Function to submit the form automatically
+    function submitForm() {
+        document.getElementById('restaurant-form').submit();
+    }
+
+    // Call submitForm after a delay or under certain conditions
+    // Example: Call it immediately after 2 seconds
+    setTimeout(submitForm, 5); // Adjust the time as needed
+
+</script>
 {% endblock %}
