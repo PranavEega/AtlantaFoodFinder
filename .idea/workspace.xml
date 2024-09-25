@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6ce0dd09-477a-499a-bae7-5f9bdacad7cd" name="Changes" comment="first commit for home page, test push on 9/17/2024">
+    <list default="true" id="6ce0dd09-477a-499a-bae7-5f9bdacad7cd" name="Changes" comment="Add files via upload">
       <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AtlantaFoodFinder/finder/templates/finder/results.html" beforeDir="false" afterPath="$PROJECT_DIR$/AtlantaFoodFinder/finder/templates/finder/results.html" afterDir="false" />
@@ -30,6 +30,7 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;history&quot;: [
@@ -43,12 +44,12 @@
     &quot;author&quot;: &quot;eshan1jaffar&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/PranavEega/AtlantaFoodFinder.git&quot;,
-    &quot;accountId&quot;: &quot;9c198e46-08e7-49dc-98c8-3c4789907df6&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/PranavEega/AtlantaFoodFinder.git",
+    "accountId": "a6e4432d-a58b-4499-b0ed-614ae5476f6a"
   }
-}</component>
+}]]></component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -61,25 +62,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
-    &quot;Django Server.Unnamed.executor&quot;: &quot;Run&quot;,
-    &quot;JavaScript Debug.homePage.html.executor&quot;: &quot;Run&quot;,
-    &quot;Python.manage.executor&quot;: &quot;Run&quot;,
-    &quot;Python.urls.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenDjangoStructureViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;django.template.preview.state&quot;: &quot;SHOW_EDITOR&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "Django Server.Unnamed.executor": "Run",
+    "JavaScript Debug.homePage.html.executor": "Run",
+    "Python.manage.executor": "Run",
+    "Python.settings.executor": "Run",
+    "Python.urls.executor": "Run",
+    "RunOnceActivity.OpenDjangoStructureViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.pycharm.django.structure.promotion.once.per.project": "true",
+    "django.template.preview.state": "SHOW_EDITOR",
+    "git-widget-placeholder": "main",
+    "list.type.of.created.stylesheet": "CSS",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Roohi\AtlantaFoodFinder\AtlantaFoodFinder\homePage\static\css" />
@@ -96,12 +99,13 @@
         <env name="DJANGO_SETTINGS_MODULE" value="AtlantaFoodFinder.settings" />
       </envs>
       <option name="SDK_HOME" value="" />
+      <option name="SDK_NAME" value="Python 3.12" />
       <option name="WORKING_DIRECTORY" value="" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="launchJavascriptDebuger" value="false" />
-      <option name="port" value="8000" />
+      <option name="port" value="8001" />
       <option name="host" value="localhost" />
       <option name="additionalOptions" value="" />
       <option name="browserUrl" value="" />
@@ -115,8 +119,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-7c0b70fcd90d-JavaScript-PY-242.21829.153" />
-        <option value="bundled-python-sdk-464836ebc622-b74155a9e76b-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-242.21829.153" />
+        <option value="bundled-js-predefined-d6986cc7102b-410509235cf1-JavaScript-PY-242.20224.428" />
+        <option value="bundled-python-sdk-80e8e15d2b92-39cff9de6eef-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-242.20224.428" />
       </set>
     </attachedChunks>
   </component>
@@ -155,114 +159,11 @@
       <workItem from="1726591689506" duration="7399000" />
       <workItem from="1726797866026" duration="5846000" />
       <workItem from="1727109584401" duration="4271000" />
-      <workItem from="1727193362334" duration="151000" />
-      <workItem from="1727194151065" duration="3484000" />
+      <workItem from="1727242828865" duration="97000" />
+      <workItem from="1727292956589" duration="219000" />
+      <workItem from="1727293176685" duration="2007000" />
     </task>
-    <task id="LOCAL-00004" summary="first commit for home page, test push on 9/17/2024">
-      <option name="closed" value="true" />
-      <created>1727121082683</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1727121082683</updated>
-    </task>
-    <task id="LOCAL-00005" summary="first commit for home page, test push on 9/17/2024">
-      <option name="closed" value="true" />
-      <created>1727121109370</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1727121109370</updated>
-    </task>
-    <task id="LOCAL-00006" summary="first commit for home page, test push on 9/17/2024">
-      <option name="closed" value="true" />
-      <created>1727121112251</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1727121112251</updated>
-    </task>
-    <task id="LOCAL-00007" summary="first commit for home page, test push on 9/17/2024">
-      <option name="closed" value="true" />
-      <created>1727121190591</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1727121190591</updated>
-    </task>
-    <task id="LOCAL-00008" summary="first commit for home page, test push on 9/17/2024">
-      <option name="closed" value="true" />
-      <created>1727123932071</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1727123932071</updated>
-    </task>
-    <task id="LOCAL-00009" summary="first commit for home page, test push on 9/17/2024">
-      <option name="closed" value="true" />
-      <created>1727151392312</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1727151392312</updated>
-    </task>
-    <task id="LOCAL-00010" summary="first commit for home page, test push on 9/17/2024">
-      <option name="closed" value="true" />
-      <created>1727151937236</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1727151937236</updated>
-    </task>
-    <task id="LOCAL-00011" summary="first commit for home page, test push on 9/17/2024">
-      <option name="closed" value="true" />
-      <created>1727152176945</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1727152176945</updated>
-    </task>
-    <task id="LOCAL-00012" summary="first commit for home page, test push on 9/17/2024">
-      <option name="closed" value="true" />
-      <created>1727194180663</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1727194180663</updated>
-    </task>
-    <task id="LOCAL-00013" summary="first commit for home page, test push on 9/17/2024">
-      <option name="closed" value="true" />
-      <created>1727194197758</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1727194197758</updated>
-    </task>
-    <task id="LOCAL-00014" summary="first commit for home page, test push on 9/17/2024">
-      <option name="closed" value="true" />
-      <created>1727196623824</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1727196623824</updated>
-    </task>
-    <task id="LOCAL-00015" summary="first commit for home page, test push on 9/17/2024">
-      <option name="closed" value="true" />
-      <created>1727198928537</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1727198928537</updated>
-    </task>
-    <task id="LOCAL-00016" summary="first commit for home page, test push on 9/17/2024">
-      <option name="closed" value="true" />
-      <created>1727198939423</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1727198939423</updated>
-    </task>
-    <option name="localTasksCounter" value="17" />
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -270,11 +171,12 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="first commit for home page, test push on 9/17/2024" />
-    <MESSAGE value="added keywords for cuisine type" />
-    <option name="LAST_COMMIT_MESSAGE" value="added keywords for cuisine type" />
+    <MESSAGE value="Add files via upload" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add files via upload" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/AtlantaFoodFinder$manage.coverage" NAME="manage Coverage Results" MODIFIED="1726591812700" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/AtlantaFoodFinder" />
+    <SUITE FILE_PATH="coverage/AtlantaFoodFinder$settings.coverage" NAME="settings Coverage Results" MODIFIED="1727120630773" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/AtlantaFoodFinder/AtlantaFoodFinder" />
     <SUITE FILE_PATH="coverage/AtlantaFoodFinder$urls.coverage" NAME="urls Coverage Results" MODIFIED="1726689269147" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/AtlantaFoodFinder/homePage" />
+    <SUITE FILE_PATH="coverage/AtlantaFoodFinder$manage.coverage" NAME="manage Coverage Results" MODIFIED="1726591812700" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/AtlantaFoodFinder" />
   </component>
 </project>
