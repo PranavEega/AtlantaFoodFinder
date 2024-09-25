@@ -41,6 +41,42 @@ def search(request):
     return render(request, 'finder/home.html')
 
 
+from django.shortcuts import render, redirect
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from .models import Favorite
+
+
+@login_required(login_url='my-login')
+def add_favorite(request):
+    if request.method == 'POST':
+        restaurant_name = request.POST.get('restaurant_name')
+        rating = request.POST.get('rating')
+        distance = request.POST.get('distance')
+        address = request.POST.get('address')
+
+        # Ensure the restaurant is not already in the user's favorites
+        if not Favorite.objects.filter(user=request.user, restaurant_name=restaurant_name).exists():
+            Favorite.objects.create(
+                user=request.user,
+                restaurant_name=restaurant_name,
+                rating=rating,
+                distance=distance,
+                address=address
+            )
+            return JsonResponse({'status': 'success', 'message': 'Added to favorites'})
+
+        return JsonResponse({'status': 'error', 'message': 'Restaurant already in favorites'})
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request'})
+
+
+@login_required(login_url='my-login')
+def dashboard(request):
+    favorites = Favorite.objects.filter(user=request.user)
+    return render(request, 'finder/dashboard.html', {'favorites': favorites})
+
+
 from django.shortcuts import render
 
 # Create your views here.

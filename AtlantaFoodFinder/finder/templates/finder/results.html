@@ -6,12 +6,12 @@
   <!-- Filter Sidebar -->
   <div style="width: 300px; padding: 20px; border-right: 1px solid #ddd;">
     <h3>Filters</h3>
-    
+
     <label for="rating-range">Rating: <span id="rating-display">0</span>+</label>
     <input type="range" id="rating-range" min="0" max="5" step="0.1" value="0">
-      <br/>
+    <br />
     <label for="distance-range" style="margin-top: 20px;">Distance: <span id="distance-display">15</span> mi</label>
-    <input type="range" id="distance-range" min="0.1" max="30" step="0.1" >
+    <input type="range" id="distance-range" min="0.1" max="30" step="0.1" />
 
     <button id="apply-filters" style="margin-top: 20px;">Apply Filters</button>
   </div>
@@ -33,13 +33,14 @@
   let markers = [];
   let userLocation = { lat: 33.7490, lng: -84.3880 }; // Default to Atlanta
   let userLocationMarker; // Variable to store user's location marker
+  let activeInfoWindow = null; // Variable to store the currently active info window
 
   // Load the Google Maps API dynamically with error handling
   function loadGoogleMapsAPI() {
     const script = document.createElement('script');
     script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDL_c5ZXIdrheexPbzzD3lPuYJGDZFVSTM&libraries=places&callback=initMap`;
     script.async = true;
-    script.onerror = function() {
+    script.onerror = function () {
       alert('Failed to load Google Maps API. Please check your API key and network.');
     };
     document.head.appendChild(script);
@@ -47,27 +48,24 @@
 
   // Initialize the map and Places service
   function initMap() {
-    // Request user's location
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           userLocation = {
             lat: position.coords.latitude,
-            lng: position.coords.longitude
+            lng: position.coords.longitude,
           };
           createMap(userLocation);
-          displayUserLocationMarker(userLocation);  // Display a marker for the user's current location
+          displayUserLocationMarker(userLocation); // Display a marker for the user's current location
         },
         () => {
-          // Fallback if the user denies location access
-          createMap(userLocation); // Use default location (Atlanta)
-          displayUserLocationMarker(userLocation);  // Display a marker for the default location
+          createMap(userLocation); // Fallback to default location (Atlanta)
+          displayUserLocationMarker(userLocation); // Display a marker for the default location
         }
       );
     } else {
-      // Browser does not support geolocation
-      createMap(userLocation);
-      displayUserLocationMarker(userLocation);  // Display a marker for the default location
+      createMap(userLocation); // No geolocation support
+      displayUserLocationMarker(userLocation); // Display a marker for the default location
     }
   }
 
@@ -75,7 +73,7 @@
   function createMap(center) {
     map = new google.maps.Map(document.getElementById('map'), {
       center: center,
-      zoom: 12
+      zoom: 12,
     });
 
     service = new google.maps.places.PlacesService(map);
@@ -83,12 +81,12 @@
 
   // Function to clear existing markers (except user location marker)
   function clearMarkers() {
-    markers.forEach(marker => {
-      if (marker !== userLocationMarker) { // Ensure the user location marker is not cleared
+    markers.forEach((marker) => {
+      if (marker !== userLocationMarker) {
         marker.setMap(null);
       }
     });
-    markers = markers.filter(marker => marker === userLocationMarker); // Retain only the user location marker
+    markers = markers.filter((marker) => marker === userLocationMarker); // Retain only the user location marker
   }
 
   // Function to display a marker for the user's current location
@@ -101,12 +99,10 @@
       map: map,
       title: 'Your Location',
       icon: {
-        url: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'  // Use a blue dot icon for user location
-      }
+        url: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png', // Use a blue dot icon for user location
+      },
     });
     markers.push(userLocationMarker);
-
-    // Center the map on the user's location
     map.setCenter(location);
   }
 
@@ -116,7 +112,7 @@
       location: userLocation,
       radius: 50000, // 50 km
       type: 'restaurant',
-      keyword: query
+      keyword: query,
     };
 
     service.nearbySearch(request, (results, status) => {
@@ -137,7 +133,7 @@
     const listElement = document.getElementById('restaurant-list');
     listElement.innerHTML = ''; // Clear previous results
 
-    results.forEach(restaurant => {
+    results.forEach((restaurant) => {
       const rating = restaurant.rating || 0;
       const distance = calculateDistance(userLocation, restaurant.geometry.location);
 
@@ -145,12 +141,11 @@
         const marker = new google.maps.Marker({
           position: restaurant.geometry.location,
           map: map,
-          title: restaurant.name
+          title: restaurant.name,
         });
 
         markers.push(marker);
 
-        // Modify here to include "Get Directions" hyperlink
         google.maps.event.addListener(marker, 'click', () => {
           const directionsUrl = `https://www.google.com/maps/dir/?api=1&origin=${userLocation.lat},${userLocation.lng}&destination=${restaurant.geometry.location.lat()},${restaurant.geometry.location.lng()}`;
 
@@ -162,92 +157,76 @@
               <p>Address: ${restaurant.vicinity}</p>
               <a href="${directionsUrl}" target="_blank">Get Directions</a>
             </div>
-            <div><button onclick="marker.setIcon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png');">Add Favorite Restaurant</button></div>`;
+            <div>
+              <button id="add-favorite-btn" data-name="${restaurant.name}" data-rating="${rating}" data-distance="${distance}" data-address="${restaurant.vicinity}">Add Favorite Restaurant</button>
+            </div>
+          `;
+
+          // Close the previously opened info window
+          if (activeInfoWindow) {
+            activeInfoWindow.close();
+          }
 
           const infoWindow = new google.maps.InfoWindow({
-            content: contentString
+            content: contentString,
           });
+
           infoWindow.open(map, marker);
+          activeInfoWindow = infoWindow; // Set the current info window as active
+
+          // Add event listener to the "Add Favorite" button
+          google.maps.event.addListenerOnce(infoWindow, 'domready', function () {
+            document.getElementById('add-favorite-btn').addEventListener('click', function () {
+              const restaurantName = this.dataset.name;
+              const rating = this.dataset.rating;
+              const distance = this.dataset.distance;
+              const address = this.dataset.address;
+
+              // Send AJAX request to add to favorites
+              fetch("{% url 'add_favorite' %}", {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded',
+                  'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: new URLSearchParams({
+                  restaurant_name: restaurantName,
+                  rating: rating,
+                  distance: distance,
+                  address: address
+                })
+              })
+              .then(response => response.json())
+              .then(data => {
+                if (data.status === 'success') {
+                  alert('Added to favorites');
+                } else {
+                  alert(data.message);
+                }
+              })
+              .catch(error => console.error('Error:', error));
+            });
+          });
         });
-function inferCuisineType(restaurantName) {
-        const cuisineKeywords = {
-  // European Cuisines
-  'Italian': ['pasta', 'pizza', 'italian', 'lasagna', 'spaghetti', 'risotto', 'gnocchi', 'ravioli', 'carbonara', 'bruschetta', 'antipasto'],
-  'French': ['baguette', 'croissant', 'crepe', 'souffle', 'ratatouille', 'escargot', 'coq au vin', 'quiche', 'bouillabaisse', 'french'],
-  'Spanish': ['paella', 'tapas', 'churro', 'gazpacho', 'jamon', 'tortilla', 'patatas bravas', 'sangria', 'iberico', 'spanish'],
-  'Greek': ['gyros', 'souvlaki', 'moussaka', 'tzatziki', 'spanakopita', 'baklava', 'greek', 'dolma'],
-  'German': ['bratwurst', 'schnitzel', 'pretzel', 'sauerkraut', 'strudel', 'spätzle', 'german'],
-  'British': ['fish and chips', 'shepherd\'s pie', 'bangers and mash', 'yorkshire pudding', 'british', 'crumpet', 'roast beef'],
-  
-  // Asian Cuisines
-  'Japanese': ['sushi', 'ramen', 'tempura', 'yakitori', 'sashimi', 'udon', 'teriyaki', 'miso', 'teppanyaki', 'katsu', 'japanese'],
-  'Chinese': ['noodle', 'dim sum', 'wonton', 'sweet and sour', 'kung pao', 'peking duck', 'chow mein', 'spring roll', 'dumpling', 'szechuan', 'chinese'],
-  'Korean': ['kimchi', 'bibimbap', 'bulgogi', 'kimbap', 'japchae', 'soju', 'korean bbq', 'korean'],
-  'Thai': ['pad thai', 'green curry', 'tom yum', 'massaman curry', 'thai', 'som tam', 'satay', 'pad see ew', 'larb'],
-  'Indian': ['curry', 'tandoori', 'biryani', 'naan', 'samosa', 'vindaloo', 'masala', 'dosa', 'rogan josh', 'butter chicken', 'paneer', 'indian'],
-  'Vietnamese': ['pho', 'banh mi', 'spring roll', 'bun cha', 'vietnamese', 'pho ga', 'com tam'],
-  'Filipino': ['adobo', 'sinangag', 'lumpia', 'lechon', 'kare-kare', 'filipino', 'sisig', 'halo-halo'],
-
-  // Middle Eastern & Mediterranean Cuisines
-  'Turkish': ['kebab', 'baklava', 'dolma', 'lahmacun', 'turkish', 'pide', 'kofte', 'borek'],
-  'Lebanese': ['hummus', 'falafel', 'tabbouleh', 'shawarma', 'baklava', 'lebanese', 'manakish', 'fattoush'],
-  'Israeli': ['shakshuka', 'falafel', 'sabich', 'hummus', 'israeli', 'bourekas', 'shawarma'],
-  'Moroccan': ['tagine', 'couscous', 'harira', 'pastilla', 'moroccan', 'kefta'],
-
-  // Latin American Cuisines
-  'Mexican': ['taco', 'burrito', 'enchilada', 'quesadilla', 'nachos', 'taqueria', 'tamale', 'salsa', 'guacamole', 'torta', 'fajita', 'mexican'],
-  'Brazilian': ['feijoada', 'churrasco', 'pão de queijo', 'brigadeiro', 'acarajé', 'brazilian'],
-  'Argentinian': ['empanada', 'asado', 'chimichurri', 'matambre', 'dulce de leche', 'argentinian'],
-  'Peruvian': ['ceviche', 'lomo saltado', 'aji de gallina', 'causa', 'pisco', 'peruvian'],
-
-  // African Cuisines
-  'Ethiopian': ['injera', 'doro wat', 'kitfo', 'ethiopian', 'tibs', 'berbere'],
-  'Nigerian': ['jollof rice', 'pounded yam', 'suya', 'egusi', 'nigerian', 'fufu'],
-  'Moroccan': ['tagine', 'couscous', 'harira', 'pastilla', 'moroccan', 'kefta'],
-
-  // American & Canadian
-  'American': ['burger', 'steak', 'hot dog', 'bbq', 'fried chicken', 'cheeseburger', 'pancakes', 'buffalo wings', 'apple pie', 'american'],
-  'Canadian': ['poutine', 'beaver tails', 'canadian', 'butter tart', 'tourtiere'],
-  
-  // Fusion and Mixed Cuisines
-  'Fusion': ['fusion', 'mixed cuisine', 'modern fusion', 'contemporary', 'global cuisine', 'asian fusion', 'latin fusion', 'european fusion'],
-  'Tex-Mex': ['fajitas', 'queso', 'chili con carne', 'taco', 'enchilada', 'tex-mex', 'nachos'],
-  
-  // Fast Food and Others
-  'Fast Food': ['burger', 'fries', 'fried chicken', 'sandwich', 'pizza', 'milkshake', 'fast food', 'hot dog', 'nuggets', 'combo meal'],
-  'Vegetarian': ['tofu', 'veggie burger', 'salad', 'quinoa', 'vegetarian', 'plant-based', 'vegan'],
-  'Vegan': ['vegan', 'plant-based', 'tofu', 'seitan', 'tempeh', 'veggie', 'cruelty-free'],
-};
-
-
-        restaurantName = restaurantName.toLowerCase();
-        for (const [cuisine, keywords] of Object.entries(cuisineKeywords)) {
-          for (const keyword of keywords) {
-            if (restaurantName.includes(keyword)) {
-              return cuisine;
-            }
-          }
-        }
-        return 'Other';
-      }
 
         const listItem = document.createElement('li');
-        listItem.textContent = `${restaurant.name} - Rating: ${rating} - Distance: ${distance.toFixed(2)} mi Cuisine: ${inferCuisineType(restaurant.name)}`;
+        listItem.textContent = `${restaurant.name} - Rating: ${rating} - Distance: ${distance.toFixed(2)} mi`;
         listElement.appendChild(listItem);
       }
     });
   }
 
-  // Calculate the distance between two points (in km)
+  // Calculate the distance between two points (in miles)
   function calculateDistance(point1, point2) {
     const R = 6371; // Radius of the Earth in km
     const dLat = (point2.lat() - point1.lat) * Math.PI / 180;
     const dLng = (point2.lng() - point1.lng) * Math.PI / 180;
-    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-              Math.cos(point1.lat * Math.PI / 180) * Math.cos(point2.lat() * Math.PI / 180) *
-              Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(point1.lat * Math.PI / 180) * Math.cos(point2.lat() * Math.PI / 180) *
+      Math.sin(dLng / 2) * Math.sin(dLng / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return (R * c)/(1.6); // Distance in km
+    return (R * c) / 1.6; // Distance in miles
   }
 
   // Event listeners for search and filter buttons

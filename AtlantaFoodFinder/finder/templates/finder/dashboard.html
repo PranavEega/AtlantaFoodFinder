@@ -1,0 +1,17 @@
+{% extends 'finder/base.html' %}
+
+{% block content %}
+  <h1>Your Favorite Restaurants</h1>
+  <ul>
+    {% for favorite in favorites %}
+      <li>
+        <strong>{{ favorite.restaurant_name }}</strong><br>
+        Rating: {{ favorite.rating }}<br>
+        Distance: {{ favorite.distance }} mi<br>
+        Address: {{ favorite.address }}<br>
+      </li>
+    {% empty %}
+      <li>You have no favorite restaurants.</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

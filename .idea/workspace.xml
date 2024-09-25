@@ -5,9 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6ce0dd09-477a-499a-bae7-5f9bdacad7cd" name="Changes" comment="first commit for home page, test push on 9/17/2024">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AtlantaFoodFinder/finder/templates/finder/dashboard.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AtlantaFoodFinder/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/AtlantaFoodFinder/db.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AtlantaFoodFinder/finder/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/AtlantaFoodFinder/finder/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AtlantaFoodFinder/finder/templates/finder/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/AtlantaFoodFinder/finder/templates/finder/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AtlantaFoodFinder/finder/templates/finder/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/AtlantaFoodFinder/finder/templates/finder/home.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AtlantaFoodFinder/finder/templates/finder/results.html" beforeDir="false" afterPath="$PROJECT_DIR$/AtlantaFoodFinder/finder/templates/finder/results.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AtlantaFoodFinder/finder/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/AtlantaFoodFinder/finder/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AtlantaFoodFinder/finder/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/AtlantaFoodFinder/finder/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AtlantaFoodFinder/homePage/templates/homePage/dashboard.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AtlantaFoodFinder/homePage/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/AtlantaFoodFinder/homePage/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AtlantaFoodFinder/homePage/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/AtlantaFoodFinder/homePage/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,9 +31,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="HTML File" />
         <option value="Python Script" />
         <option value="CSS File" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -269,9 +278,9 @@
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="first commit for home page, test push on 9/17/2024" />
     <MESSAGE value="added keywords for cuisine type" />
-    <option name="LAST_COMMIT_MESSAGE" value="added keywords for cuisine type" />
+    <MESSAGE value="first commit for home page, test push on 9/17/2024" />
+    <option name="LAST_COMMIT_MESSAGE" value="first commit for home page, test push on 9/17/2024" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/AtlantaFoodFinder$manage.coverage" NAME="manage Coverage Results" MODIFIED="1726591812700" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/AtlantaFoodFinder" />
