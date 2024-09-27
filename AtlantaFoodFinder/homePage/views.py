@@ -50,16 +50,12 @@ def my_login(request):
 
                 auth.login(request, user)
 
-                return redirect('/dashboard')
+                return redirect('/search')
 
     context = {'loginform': form}
 
     return render(request, "homePage/my_login.html", context = context)
 
-@login_required(login_url='my-login')
-@cache_control(no_cache = True, must_revalidate = True, no_store = True)
-def dashboard(request):
-    return render(request, "homePage/dashboard.html")
 
 def user_logout(request):
     logout(request)

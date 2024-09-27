@@ -4,7 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6ce0dd09-477a-499a-bae7-5f9bdacad7cd" name="Changes" comment="first commit for home page, test push on 9/17/2024" />
+    <list default="true" id="6ce0dd09-477a-499a-bae7-5f9bdacad7cd" name="Changes" comment="first commit for home page, test push on 9/17/2024">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_9_18_2024_4_24_PM_[Changes]/db.sqlite3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_9_18_2024_4_24_PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_9_18_2024_4_24_PM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AtlantaFoodFinder/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/AtlantaFoodFinder/db.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AtlantaFoodFinder/finder/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/AtlantaFoodFinder/finder/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AtlantaFoodFinder/finder/templates/finder/results.html" beforeDir="false" afterPath="$PROJECT_DIR$/AtlantaFoodFinder/finder/templates/finder/results.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AtlantaFoodFinder/finder/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/AtlantaFoodFinder/finder/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AtlantaFoodFinder/homePage/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/AtlantaFoodFinder/homePage/views.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -153,6 +164,7 @@
       <workItem from="1727109584401" duration="4271000" />
       <workItem from="1727193362334" duration="151000" />
       <workItem from="1727194151065" duration="3484000" />
+      <workItem from="1727475713590" duration="1497000" />
     </task>
     <task id="LOCAL-00004" summary="first commit for home page, test push on 9/17/2024">
       <option name="closed" value="true" />
@@ -242,16 +254,48 @@
       <option name="project" value="LOCAL" />
       <updated>1727196623824</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="first commit for home page, test push on 9/17/2024">
+      <option name="closed" value="true" />
+      <created>1727198928537</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1727198928537</updated>
+    </task>
+    <task id="LOCAL-00016" summary="first commit for home page, test push on 9/17/2024">
+      <option name="closed" value="true" />
+      <created>1727198939423</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1727198939423</updated>
+    </task>
+    <task id="LOCAL-00017" summary="first commit for home page, test push on 9/17/2024">
+      <option name="closed" value="true" />
+      <created>1727297561462</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1727297561462</updated>
+    </task>
+    <task id="LOCAL-00018" summary="first commit for home page, test push on 9/17/2024">
+      <option name="closed" value="true" />
+      <created>1727297575768</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1727297575768</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="first commit for home page, test push on 9/17/2024" />
     <MESSAGE value="added keywords for cuisine type" />
-    <option name="LAST_COMMIT_MESSAGE" value="added keywords for cuisine type" />
+    <MESSAGE value="first commit for home page, test push on 9/17/2024" />
+    <option name="LAST_COMMIT_MESSAGE" value="first commit for home page, test push on 9/17/2024" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/AtlantaFoodFinder$manage.coverage" NAME="manage Coverage Results" MODIFIED="1726591812700" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/AtlantaFoodFinder" />
