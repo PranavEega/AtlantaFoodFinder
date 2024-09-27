@@ -50,27 +50,28 @@ from .models import Favorite
 @login_required(login_url='my-login')
 def add_favorite(request):
     if request.method == 'POST':
+        user = request.user  # Get the logged-in user
         restaurant_name = request.POST.get('restaurant_name')
         rating = request.POST.get('rating')
         distance = request.POST.get('distance')
         address = request.POST.get('address')
 
-        # Ensure the restaurant is not already in the user's favorites
-        if not Favorite.objects.filter(user=request.user, restaurant_name=restaurant_name).exists():
-            Favorite.objects.create(
-                user=request.user,
-                restaurant_name=restaurant_name,
-                rating=rating,
-                distance=distance,
-                address=address
-            )
-            return JsonResponse({'status': 'success', 'message': 'Added to favorites'})
+        # Check if the restaurant with the same name and address is already favorited by the user
+        if Favorite.objects.filter(user=user, restaurant_name=restaurant_name, address=address).exists():
+            return JsonResponse({'status': 'error', 'message': 'This restaurant is already in your favorites.'})
 
-        return JsonResponse({'status': 'error', 'message': 'Restaurant already in favorites'})
+        # Create and save the favorite restaurant for this user
+        favorite = Favorite.objects.create(
+            user=user,
+            restaurant_name=restaurant_name,
+            rating=rating,
+            distance=distance,
+            address=address
+        )
+
+        return JsonResponse({'status': 'success', 'message': 'Restaurant added to favorites'})
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request'})
-
-
 @login_required(login_url='my-login')
 def dashboard(request):
     favorites = Favorite.objects.filter(user=request.user)

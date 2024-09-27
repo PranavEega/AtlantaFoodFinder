@@ -50,7 +50,7 @@ def my_login(request):
 
                 auth.login(request, user)
 
-                return redirect('finder/dashboard')
+                return redirect('/search')
 
     context = {'loginform': form}
 
