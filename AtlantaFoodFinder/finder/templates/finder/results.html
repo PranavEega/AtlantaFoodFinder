@@ -1,15 +1,14 @@
 {% extends 'finder/base.html' %}
 
 {% block content %}
-
 <div style="display: flex;">
   <!-- Filter Sidebar -->
   <div style="width: 300px; padding: 20px; border-right: 1px solid #ddd;">
     <h3>Filters</h3>
-    
+
     <label for="rating-range">Rating: <span id="rating-display">0</span>+</label>
     <input type="range" id="rating-range" min="0" max="5" step="0.1" value="0">
-    
+    <br>
     <label for="distance-range" style="margin-top: 20px;">Distance: <span id="distance-display">50</span> km</label>
     <input type="range" id="distance-range" min="1" max="50" step="1" value="50">
 
@@ -17,14 +16,13 @@
   </div>
 
   <!-- Map and Search Area -->
-  <div style="flex: 1; padding: 20px;">
-    <div>
-      <input type="text" id="search-input" placeholder="Search for restaurants by name, location, or cuisine" />
-      <button id="search-button">Search</button>
-    </div>
-    <div id="map" style="height: 700px; width: 100%; margin-top: 20px;"></div>
-    <ul id="restaurant-list"></ul>
+ <div class="map-search-area">
+  <div class="search-box">
+      <label for="search-input"></label><input type="text" id="search-input" placeholder="Search for restaurants by name, location, or cuisine" />
+    <button id="search-button">Search</button>
   </div>
+  <div id="map"></div>
+  <ul id="restaurant-list"></ul>
 </div>
 
 <script>
@@ -128,6 +126,8 @@
     });
   }
 
+
+
   // Apply rating and distance filters to the search results
   function applyFilters(results) {
     const minRating = parseFloat(document.getElementById('rating-range').value);
@@ -140,13 +140,13 @@
     results.forEach(restaurant => {
       const rating = restaurant.rating || 0;
       const distance = calculateDistance(userLocation, restaurant.geometry.location);
-
       if (rating >= minRating && distance <= maxDistance) {
         const marker = new google.maps.Marker({
           position: restaurant.geometry.location,
           map: map,
           title: restaurant.name
         });
+        console.log(results);
 
         markers.push(marker);
 
@@ -178,7 +178,7 @@ function inferCuisineType(restaurantName) {
   'Greek': ['gyros', 'souvlaki', 'moussaka', 'tzatziki', 'spanakopita', 'baklava', 'greek', 'dolma'],
   'German': ['bratwurst', 'schnitzel', 'pretzel', 'sauerkraut', 'strudel', 'spätzle', 'german'],
   'British': ['fish and chips', 'shepherd\'s pie', 'bangers and mash', 'yorkshire pudding', 'british', 'crumpet', 'roast beef'],
-  
+
   // Asian Cuisines
   'Japanese': ['sushi', 'ramen', 'tempura', 'yakitori', 'sashimi', 'udon', 'teriyaki', 'miso', 'teppanyaki', 'katsu', 'japanese'],
   'Chinese': ['noodle', 'dim sum', 'wonton', 'sweet and sour', 'kung pao', 'peking duck', 'chow mein', 'spring roll', 'dumpling', 'szechuan', 'chinese'],
@@ -208,11 +208,11 @@ function inferCuisineType(restaurantName) {
   // American & Canadian
   'American': ['burger', 'steak', 'hot dog', 'bbq', 'fried chicken', 'cheeseburger', 'pancakes', 'buffalo wings', 'apple pie', 'american'],
   'Canadian': ['poutine', 'beaver tails', 'canadian', 'butter tart', 'tourtiere'],
-  
+
   // Fusion and Mixed Cuisines
   'Fusion': ['fusion', 'mixed cuisine', 'modern fusion', 'contemporary', 'global cuisine', 'asian fusion', 'latin fusion', 'european fusion'],
   'Tex-Mex': ['fajitas', 'queso', 'chili con carne', 'taco', 'enchilada', 'tex-mex', 'nachos'],
-  
+
   // Fast Food and Others
   'Fast Food': ['burger', 'fries', 'fried chicken', 'sandwich', 'pizza', 'milkshake', 'fast food', 'hot dog', 'nuggets', 'combo meal'],
   'Vegetarian': ['tofu', 'veggie burger', 'salad', 'quinoa', 'vegetarian', 'plant-based', 'vegan'],
@@ -233,6 +233,7 @@ function inferCuisineType(restaurantName) {
 
         const listItem = document.createElement('li');
         listItem.textContent = `${restaurant.name} - Rating: ${rating} - Distance: ${distance.toFixed(2)} km Cuisine: ${inferCuisineType(restaurant.name)}`;
+
         listElement.appendChild(listItem);
       }
     });
