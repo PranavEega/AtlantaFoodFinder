@@ -6,7 +6,7 @@
   <!-- Filter Sidebar -->
   <div style="width: 300px; padding: 20px; border-right: 1px solid #ddd;">
     <h3>Filters</h3>
-    
+
     <label for="rating-range">Rating: <span id="rating-display">0</span>+</label>
     <input type="range" id="rating-range" min="0" max="5" step="0.1" value="0">
     <br/>
@@ -144,7 +144,7 @@
           if (activeInfoWindow) {
             activeInfoWindow.close();
           }
-          
+
           // Call getRestaurantDetails to fetch details
           getRestaurantDetails(restaurant.place_id, marker);
         });
