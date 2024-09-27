@@ -6,7 +6,7 @@
   <!-- Filter Sidebar -->
   <div style="width: 300px; padding: 20px; border-right: 1px solid #ddd;">
     <h3>Filters</h3>
-
+    
     <label for="rating-range">Rating: <span id="rating-display">0</span>+</label>
     <input type="range" id="rating-range" min="0" max="5" step="0.1" value="0">
     <br/>
@@ -144,52 +144,85 @@
           if (activeInfoWindow) {
             activeInfoWindow.close();
           }
+          
+          // Get restaurant details
+          service.getDetails({ placeId: restaurant.place_id }, (placeDetails, status) => {
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
+              const reviews = placeDetails.reviews || [];
+              const helpfulReviews = reviews.sort((a, b) => b.text.length - a.text.length).slice(0, 5); // Get 5 most helpful reviews
 
-          // Call getRestaurantDetails to fetch details
-          getRestaurantDetails(restaurant.place_id, marker);
+              const reviewItems = helpfulReviews.map(review => `
+                <p><strong>${review.author_name} - ${review.rating} stars:</strong> ${review.text}</p>
+              `).join('');
+
+              const contentString = `
+                <div>
+                  <h2>${restaurant.name}</h2>
+                  <p>Rating: ${rating}</p>
+                  <p>Distance: ${distance.toFixed(2)} mi</p>
+                  <p>Address: ${placeDetails.formatted_address}</p>
+                  <p>Phone: ${placeDetails.formatted_phone_number || 'Not Available'}</p>
+                  <p>Website: <a href="${placeDetails.website}" target="_blank">${placeDetails.website || 'Not Available'}</a></p>
+                  <a href="https://www.google.com/maps/dir/?api=1&origin=${userLocation.lat},${userLocation.lng}&destination=${restaurant.geometry.location.lat()},${restaurant.geometry.location.lng()}" target="_blank">Get Directions</a>
+                  <div style="max-height: 200px; overflow-y: auto; border-top: 1px solid #ddd; padding-top: 10px;">
+                    <h3>Reviews</h3>
+                    ${reviewItems.length ? reviewItems : '<p>No reviews available</p>'}
+                  </div>
+                </div>
+                <div>
+                  <button id="add-favorite-btn" data-name="${restaurant.name}" data-rating="${rating}" data-distance="${distance}" data-address="${placeDetails.formatted_address}">Add Favorite Restaurant</button>
+                </div>
+              `;
+
+              const infoWindow = new google.maps.InfoWindow({
+                content: contentString
+              });
+
+              infoWindow.open(map, marker);
+              activeInfoWindow = infoWindow; // Set active info window
+
+              // Add "Add to Favorites" functionality
+              google.maps.event.addListenerOnce(infoWindow, 'domready', function () {
+                document.getElementById('add-favorite-btn').addEventListener('click', function () {
+                  const restaurantName = this.dataset.name;
+                  const rating = this.dataset.rating;
+                  const distance = this.dataset.distance;
+                  const address = this.dataset.address;
+
+                  // Send AJAX request to add to favorites
+                  fetch("{% url 'add_favorite' %}", {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/x-www-form-urlencoded',
+                      'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: new URLSearchParams({
+                      restaurant_name: restaurantName,
+                      rating: rating,
+                      distance: distance,
+                      address: address
+                    })
+                  })
+                  .then(response => response.json())
+                  .then(data => {
+                    if (data.status === 'success') {
+                      alert('Added to favorites');
+                    } else {
+                      alert(data.message);
+                    }
+                  })
+                  .catch(error => console.error('Error:', error));
+                });
+              });
+            } else {
+              console.error('Error fetching place details: ', status);
+            }
+          });
         });
 
         const listItem = document.createElement('li');
         listItem.textContent = `${restaurant.name} - Rating: ${rating} - Distance: ${distance.toFixed(2)} mi`;
         listElement.appendChild(listItem);
-      }
-    });
-  }
-
-  function getRestaurantDetails(placeId, marker) {
-    const request = {
-      placeId: placeId,
-      fields: ['name', 'rating', 'formatted_phone_number', 'formatted_address', 'reviews']
-    };
-
-    service.getDetails(request, (place, status) => {
-      if (status === google.maps.places.PlacesServiceStatus.OK) {
-        const directionsUrl = `https://www.google.com/maps/dir/?api=1&origin=${userLocation.lat},${userLocation.lng}&destination=${marker.getPosition().lat()},${marker.getPosition().lng()}`;
-        const contentString = `
-          <div>
-            <h2>${place.name}</h2>
-            <p>Rating: ${place.rating}</p>
-            <p>Address: ${place.formatted_address}</p>
-            <p>Phone Number: ${place.formatted_phone_number}</p>
-            <a href="${directionsUrl}" target="_blank">Get Directions</a>
-            <h3>Reviews:</h3>
-            <div style="max-height: 200px; overflow-y: auto;">
-              ${place.reviews ? place.reviews.map(review => `
-                <div style="margin-bottom: 10px;">
-                  <p><strong>${review.author_name}</strong> - ${review.rating} stars</p>
-                  <p>${review.text}</p>
-                </div>
-              `).join('') : 'No reviews available'}
-            </div>
-          </div>
-          <div><button onclick="">Add Favorite Restaurant</button></div>`;
-
-        const infoWindow = new google.maps.InfoWindow({
-          content: contentString
-        });
-        infoWindow.open(map, marker);
-      } else {
-        console.error('Error fetching restaurant details: ', status);
       }
     });
   }
@@ -227,3 +260,4 @@
 </script>
 
 {% endblock %}
+
