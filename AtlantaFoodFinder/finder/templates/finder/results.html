@@ -45,6 +45,20 @@
     document.head.appendChild(script);
   }
 
+  const cuisineKeywords = { /* Cuisine keyword data here... */ };
+
+  function inferCuisineType(restaurantName) {
+    restaurantName = restaurantName.toLowerCase();
+    for (const [cuisine, keywords] of Object.entries(cuisineKeywords)) {
+      for (const keyword of keywords) {
+        if (restaurantName.includes(keyword)) {
+          return cuisine;
+        }
+      }
+    }
+    return 'Other';
+  }
+
   function initMap() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -144,7 +158,7 @@
           if (activeInfoWindow) {
             activeInfoWindow.close();
           }
-          
+
           // Get restaurant details
           service.getDetails({ placeId: restaurant.place_id }, (placeDetails, status) => {
             if (status === google.maps.places.PlacesServiceStatus.OK) {
@@ -179,9 +193,8 @@
               });
 
               infoWindow.open(map, marker);
-              activeInfoWindow = infoWindow; // Set active info window
+              activeInfoWindow = infoWindow;
 
-              // Add "Add to Favorites" functionality
               google.maps.event.addListenerOnce(infoWindow, 'domready', function () {
                 document.getElementById('add-favorite-btn').addEventListener('click', function () {
                   const restaurantName = this.dataset.name;
@@ -189,7 +202,6 @@
                   const distance = this.dataset.distance;
                   const address = this.dataset.address;
 
-                  // Send AJAX request to add to favorites
                   fetch("{% url 'add_favorite' %}", {
                     method: 'POST',
                     headers: {
@@ -220,9 +232,13 @@
           });
         });
 
-        const listItem = document.createElement('li');
-        listItem.textContent = `${restaurant.name} - Rating: ${rating} - Distance: ${distance.toFixed(2)} mi`;
-        listElement.appendChild(listItem);
+        service.getDetails({ placeId: restaurant.place_id }, (placeDetails, status) => {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+          const listItem = document.createElement('li');
+          listItem.textContent = `${restaurant.name} - Rating: ${rating} - Distance: ${distance.toFixed(2)} miles - Phone: ${placeDetails.formatted_phone_number || 'Not Available'} - Website: ${placeDetails.website || 'Not Available'}`;
+          listElement.appendChild(listItem);
+        }
+      });
       }
     });
   }
