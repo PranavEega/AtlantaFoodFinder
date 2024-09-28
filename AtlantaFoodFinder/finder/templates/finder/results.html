@@ -92,7 +92,6 @@
     'Vegetarian': ['tofu', 'veggie burger', 'salad', 'quinoa', 'vegetarian', 'plant-based', 'vegan'],
     'Vegan': ['vegan', 'plant-based', 'tofu', 'seitan', 'tempeh', 'veggie', 'cruelty-free'],
   };
-
 // Object to store detected cuisines for restaurant names
 const restaurantCuisineCache = {};
 
@@ -104,34 +103,39 @@ function inferCuisineType(placeDetails) {
     return restaurantCuisineCache[restaurantName]; // Return cached cuisine type
   }
 
-  // Fallback to overview-based keyword matching process
-  const overviewData = [
-    placeDetails.name || '',
-    (placeDetails.types || []).join(' '),
-    placeDetails.website || '',
-    placeDetails.reviews ? placeDetails.reviews.map(review => review.text).join(' ') : ''
-  ].join(' ').toLowerCase();
+  // Step 1: Prioritize cuisine detection from the restaurant name
+  let detectedCuisine = matchCuisineFromKeywords(restaurantName);
 
-  let detectedCuisine = 'Other'; // Default to 'Other'
+  // Step 2: If name returns "Other", fall back to types, website, and reviews
+  if (detectedCuisine === 'Other') {
+    const overviewData = [
+      placeDetails.types ? placeDetails.types.join(' ') : '',
+      placeDetails.website || '',
+      placeDetails.reviews ? placeDetails.reviews.map(review => review.text).join(' ') : ''
+    ].join(' ').toLowerCase();
 
-  // Iterate through cuisineKeywords to match keywords in overviewData
-  for (const [cuisine, keywords] of Object.entries(cuisineKeywords)) {
-    for (const keyword of keywords) {
-      if (overviewData.includes(keyword)) {
-        detectedCuisine = cuisine;
-        break;
-      }
-    }
-    if (detectedCuisine !== 'Other') {
-      break;
-    }
+    detectedCuisine = matchCuisineFromKeywords(overviewData);
   }
 
-  // Store the detected cuisine in the cache for future consistency
+  // Cache the detected cuisine for future consistency
   restaurantCuisineCache[restaurantName] = detectedCuisine;
 
   return detectedCuisine;
 }
+
+// Helper function to match cuisine keywords in a text
+function matchCuisineFromKeywords(text) {
+  for (const [cuisine, keywords] of Object.entries(cuisineKeywords)) {
+    for (const keyword of keywords) {
+      if (text.includes(keyword)) {
+        return cuisine; // Return the cuisine type if a keyword is matched
+      }
+    }
+  }
+  return 'Other'; // Return 'Other' if no match is found
+}
+
+
 
 
   function initMap() {
