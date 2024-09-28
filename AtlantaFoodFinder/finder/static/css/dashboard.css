@@ -44,7 +44,7 @@ tr:hover {
   display: block;
   width: 100%;
   padding: 10px;
-  background-color: #28a745;
+  background-color: #154c79;
   color: white;
   border: none;
   border-radius: 5px;
@@ -54,7 +54,7 @@ tr:hover {
 }
 
 .action-btn:hover {
-  background-color: #218838;
+  background-color: #113b5c;
 }
 
 .delete-btn {

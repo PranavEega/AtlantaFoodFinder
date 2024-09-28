@@ -2,27 +2,26 @@
 
 {% block content %}
 
-<div style="display: flex;">
+
+<div class="container">
   <!-- Filter Sidebar -->
-  <div style="width: 300px; padding: 20px; border-right: 1px solid #ddd;">
+  <div class="sidebar">
     <h3>Filters</h3>
-    
     <label for="rating-range">Rating: <span id="rating-display">0</span>+</label>
     <input type="range" id="rating-range" min="0" max="5" step="0.1" value="0">
     <br/>
-    <label for="distance-range" style="margin-top: 20px;">Distance: <span id="distance-display">15</span> mi</label>
-    <input type="range" id="distance-range" min="0.1" max="30" step="0.1" >
-
-    <button id="apply-filters" style="margin-top: 20px;">Apply Filters</button>
+    <label for="distance-range">Distance: <span id="distance-display">15</span> mi</label>
+    <input type="range" id="distance-range" min="0.1" max="30" step="0.1">
+    <button id="apply-filters">Apply Filters</button>
   </div>
 
   <!-- Map and Search Area -->
-  <div style="flex: 1; padding: 20px;">
-    <div>
+  <div class="main-content">
+    <div class="search-bar">
       <input type="text" id="search-input" placeholder="Search for restaurants by name, location, or cuisine" />
       <button id="search-button">Search</button>
     </div>
-    <div id="map" style="height: 700px; width: 100%; margin-top: 20px;"></div>
+    <div id="map" class="map-container"></div>
     <ul id="restaurant-list"></ul>
   </div>
 </div>
@@ -282,7 +281,24 @@
         service.getDetails({ placeId: restaurant.place_id }, (placeDetails, status) => {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
           const listItem = document.createElement('li');
-          listItem.textContent = `${restaurant.name} - Rating: ${rating} - Distance: ${distance.toFixed(2)} miles - Cuisine: ${inferCuisineType(restaurant.name)} - Phone: ${placeDetails.formatted_phone_number || 'Not Available'} - Website: ${placeDetails.website || 'Not Available'}`;
+            listItem.innerHTML = `
+              <div style="padding: 10px; border-bottom: 1px solid #ddd;">
+                <h4 style="margin: 0; color: #154c79;">${restaurant.name}</h4>
+                <p style="margin: 5px 0;">
+                  <strong>Rating:</strong> ${rating} |
+                  <strong>Distance:</strong> ${distance.toFixed(2)} miles |
+                  <strong>Cuisine:</strong> ${inferCuisineType(restaurant.name)}
+                </p>
+                <p style="margin: 5px 0;">
+                  <strong>Phone:</strong> ${placeDetails.formatted_phone_number || 'Not Available'}
+                </p>
+                <p style="margin: 5px 0;">
+                  <strong>Website:</strong>
+                  ${placeDetails.website
+                    ? `<a href="${placeDetails.website}" target="_blank" style="color: #154c79; text-decoration: none;">Visit Website</a>`
+                    : 'Not Available'}
+                </p>
+              </div>`;
           listElement.appendChild(listItem);
         }
       });
