@@ -93,17 +93,46 @@
     'Vegan': ['vegan', 'plant-based', 'tofu', 'seitan', 'tempeh', 'veggie', 'cruelty-free'],
   };
 
-  function inferCuisineType(restaurantName) {
-    restaurantName = restaurantName.toLowerCase();
-    for (const [cuisine, keywords] of Object.entries(cuisineKeywords)) {
-      for (const keyword of keywords) {
-        if (restaurantName.includes(keyword)) {
-          return cuisine;
-        }
+// Object to store detected cuisines for restaurant names
+const restaurantCuisineCache = {};
+
+function inferCuisineType(placeDetails) {
+  const restaurantName = placeDetails.name.toLowerCase();
+
+  // Check if we have already assigned a cuisine type for this restaurant
+  if (restaurantCuisineCache[restaurantName]) {
+    return restaurantCuisineCache[restaurantName]; // Return cached cuisine type
+  }
+
+  // Fallback to overview-based keyword matching process
+  const overviewData = [
+    placeDetails.name || '',
+    (placeDetails.types || []).join(' '),
+    placeDetails.website || '',
+    placeDetails.reviews ? placeDetails.reviews.map(review => review.text).join(' ') : ''
+  ].join(' ').toLowerCase();
+
+  let detectedCuisine = 'Other'; // Default to 'Other'
+
+  // Iterate through cuisineKeywords to match keywords in overviewData
+  for (const [cuisine, keywords] of Object.entries(cuisineKeywords)) {
+    for (const keyword of keywords) {
+      if (overviewData.includes(keyword)) {
+        detectedCuisine = cuisine;
+        break;
       }
     }
-    return 'Other';
+    if (detectedCuisine !== 'Other') {
+      break;
+    }
   }
+
+  // Store the detected cuisine in the cache for future consistency
+  restaurantCuisineCache[restaurantName] = detectedCuisine;
+
+  return detectedCuisine;
+}
+
 
   function initMap() {
     if (navigator.geolocation) {
@@ -218,7 +247,7 @@
                 <div>
                   <h2>${restaurant.name}</h2>
                   <p>Rating: ${rating}</p>
-                  <p>Cuisine: ${inferCuisineType(restaurant.name)}</p>
+                  <p>Cuisine: ${inferCuisineType(placeDetails)}</p>
                   <p>Distance: ${distance.toFixed(2)} mi</p>
                   <p>Address: ${placeDetails.formatted_address}</p>
                   <p>Phone: ${placeDetails.formatted_phone_number || 'Not Available'}</p>
@@ -279,29 +308,35 @@
         });
 
         service.getDetails({ placeId: restaurant.place_id }, (placeDetails, status) => {
-        if (status === google.maps.places.PlacesServiceStatus.OK) {
-          const listItem = document.createElement('li');
-            listItem.innerHTML = `
-              <div style="padding: 10px; border-bottom: 1px solid #ddd;">
-                <h4 style="margin: 0; color: #154c79;">${restaurant.name}</h4>
-                <p style="margin: 5px 0;">
-                  <strong>Rating:</strong> ${rating} |
-                  <strong>Distance:</strong> ${distance.toFixed(2)} miles |
-                  <strong>Cuisine:</strong> ${inferCuisineType(restaurant.name)}
-                </p>
-                <p style="margin: 5px 0;">
-                  <strong>Phone:</strong> ${placeDetails.formatted_phone_number || 'Not Available'}
-                </p>
-                <p style="margin: 5px 0;">
-                  <strong>Website:</strong>
-                  ${placeDetails.website
-                    ? `<a href="${placeDetails.website}" target="_blank" style="color: #154c79; text-decoration: none;">Visit Website</a>`
-                    : 'Not Available'}
-                </p>
-              </div>`;
-          listElement.appendChild(listItem);
-        }
-      });
+  if (status === google.maps.places.PlacesServiceStatus.OK) {
+    const listItem = document.createElement('li');
+    listItem.innerHTML = `
+      <div style="padding: 10px; border-bottom: 1px solid #ddd;">
+        <h4 style="margin: 0; color: #154c79;">${restaurant.name}</h4>
+        <p style="margin: 5px 0;">
+          <strong>Rating:</strong> ${rating} |
+          <strong>Distance:</strong> ${distance.toFixed(2)} miles |
+          <strong>Cuisine:</strong> ${inferCuisineType(placeDetails)}
+        </p>
+        <p style="margin: 5px 0;">
+          <strong>Phone:</strong> ${placeDetails.formatted_phone_number || 'Not Available'}
+        </p>
+        <p style="margin: 5px 0;">
+
+          ${placeDetails.website
+            ? `<a href="${placeDetails.website}" target="_blank" style="color: #154c79; text-decoration: none;"><strong>Visit Website</strong></a>`
+            : 'Not Available'}
+        </p>
+        <p style="margin: 5px 0;">
+          <a href="https://search.google.com/local/writereview?placeid=${restaurant.place_id}" target="_blank" style="color: #154c79; text-decoration: none;">
+            <strong>Leave a Google Review</strong>
+          </a>
+        </p>
+      </div>`;
+    listElement.appendChild(listItem);
+  }
+});
+
       }
     });
   }
@@ -336,6 +371,8 @@
   });
 
   window.onload = loadGoogleMapsAPI;
+
+
 </script>
 
 {% endblock %}
