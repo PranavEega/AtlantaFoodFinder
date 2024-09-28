@@ -7,14 +7,14 @@ from django.conf import settings
 from django.views.decorators.cache import cache_control
 
 
+@login_required(login_url='my-login')
 def home(request):
     return render(request, 'finder/home.html')
 
-'''
+
+
 @login_required(login_url='my-login')
 @cache_control(no_cache = True, must_revalidate = True, no_store = True)
-
-'''
 def search(request):
     if request.method == 'POST':
         location = '33.7488, -84.3877'
@@ -76,6 +76,28 @@ def add_favorite(request):
 def dashboard(request):
     favorites = Favorite.objects.filter(user=request.user)
     return render(request, 'finder/dashboard.html', {'favorites': favorites})
+
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from .models import Favorite # Adjust this according to your model name
+import json
+
+@csrf_exempt  # Use this decorator if you need to exempt the view from CSRF verification
+def delete_favorites(request):
+    if request.method == 'POST':
+        try:
+            # Parse the JSON data
+            data = json.loads(request.body)
+            restaurant_ids = data.get('restaurant_ids', [])
+
+            # Delete the selected favorite restaurants
+            Favorite.objects.filter(id__in=restaurant_ids).delete()
+
+            return JsonResponse({'status': 'success'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)})
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
 
 
 from django.shortcuts import render
