@@ -1,0 +1,145 @@
+/* General page styling */
+body {
+  font-family: "Verdana", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #e0f1ff;
+  color: #081e30;
+}
+
+h1, h3 {
+  color: #154c79;
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+/* Navbar styling */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background-color: #081e30;
+  color: white;
+}
+
+.navbar-left h1 {
+  margin: 0;
+  font-size: 24px;
+  color: #ffffff;
+}
+
+.navbar-right {
+  display: flex;
+  gap: 10px;
+}
+
+.nav-button {
+  background-color: #154c79;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.nav-button:hover {
+  background-color: #133d66;
+}
+
+
+/* Container layout */
+.container {
+  display: flex;
+  min-height: 100vh;
+  padding: 20px;
+  gap: 20px;
+}
+
+/* Sidebar styling */
+.sidebar {
+  width: 300px;
+  padding: 20px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+input[type="range"] {
+  width: 100%;
+}
+
+button {
+  padding: 10px 15px;
+  margin-top: 20px;
+  border: none;
+  border-radius: 8px;
+  background-color: #154c79;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0a385b;
+}
+
+/* Main content styling */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.search-bar {
+  display: flex;
+  gap: 10px;
+}
+
+.search-bar input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #154c79;
+  border-radius: 8px;
+}
+
+.search-bar button {
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background-color: #154c79;
+  color: white;
+  cursor: pointer;
+}
+
+.search-bar button:hover {
+  background-color: #0a385b;
+}
+
+/* Map container styling */
+.map-container {
+  height: 700px;
+  width: 100%;
+  background-color: #d1e9ff;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Restaurant list styling */
+#restaurant-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+#restaurant-list li {
+  padding: 10px;
+  background-color: white;
+  border-radius: 8px;
+  margin-top: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}

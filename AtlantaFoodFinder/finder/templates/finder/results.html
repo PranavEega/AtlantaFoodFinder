@@ -2,27 +2,26 @@
 
 {% block content %}
 
-<div style="display: flex;">
+
+<div class="container">
   <!-- Filter Sidebar -->
-  <div style="width: 300px; padding: 20px; border-right: 1px solid #ddd;">
+  <div class="sidebar">
     <h3>Filters</h3>
-    
     <label for="rating-range">Rating: <span id="rating-display">0</span>+</label>
     <input type="range" id="rating-range" min="0" max="5" step="0.1" value="0">
     <br/>
-    <label for="distance-range" style="margin-top: 20px;">Distance: <span id="distance-display">15</span> mi</label>
-    <input type="range" id="distance-range" min="0.1" max="30" step="0.1" >
-
-    <button id="apply-filters" style="margin-top: 20px;">Apply Filters</button>
+    <label for="distance-range">Distance: <span id="distance-display">15</span> mi</label>
+    <input type="range" id="distance-range" min="0.1" max="30" step="0.1">
+    <button id="apply-filters">Apply Filters</button>
   </div>
 
   <!-- Map and Search Area -->
-  <div style="flex: 1; padding: 20px;">
-    <div>
+  <div class="main-content">
+    <div class="search-bar">
       <input type="text" id="search-input" placeholder="Search for restaurants by name, location, or cuisine" />
       <button id="search-button">Search</button>
     </div>
-    <div id="map" style="height: 700px; width: 100%; margin-top: 20px;"></div>
+    <div id="map" class="map-container"></div>
     <ul id="restaurant-list"></ul>
   </div>
 </div>
@@ -81,7 +80,7 @@
     'Moroccan': ['tagine', 'couscous', 'harira', 'pastilla', 'moroccan', 'kefta'],
 
     // American & Canadian
-    'American': ['burger', 'steak', 'hot dog', 'bbq', 'fried chicken', 'cheeseburger', 'pancakes', 'buffalo wings', 'apple pie', 'american'],
+    'American': ['burger', 'steak', 'hot dog', 'bbq', 'fried chicken', 'cheeseburger', 'pancakes', 'buffalo wings', 'apple pie', 'american', 'waffle'],
     'Canadian': ['poutine', 'beaver tails', 'canadian', 'butter tart', 'tourtiere'],
     
     // Fusion and Mixed Cuisines
@@ -93,18 +92,51 @@
     'Vegetarian': ['tofu', 'veggie burger', 'salad', 'quinoa', 'vegetarian', 'plant-based', 'vegan'],
     'Vegan': ['vegan', 'plant-based', 'tofu', 'seitan', 'tempeh', 'veggie', 'cruelty-free'],
   };
+// Object to store detected cuisines for restaurant names
+const restaurantCuisineCache = {};
 
-  function inferCuisineType(restaurantName) {
-    restaurantName = restaurantName.toLowerCase();
-    for (const [cuisine, keywords] of Object.entries(cuisineKeywords)) {
-      for (const keyword of keywords) {
-        if (restaurantName.includes(keyword)) {
-          return cuisine;
-        }
+function inferCuisineType(placeDetails) {
+  const restaurantName = placeDetails.name.toLowerCase();
+
+  // Check if we have already assigned a cuisine type for this restaurant
+  if (restaurantCuisineCache[restaurantName]) {
+    return restaurantCuisineCache[restaurantName]; // Return cached cuisine type
+  }
+
+  // Step 1: Prioritize cuisine detection from the restaurant name
+  let detectedCuisine = matchCuisineFromKeywords(restaurantName);
+
+  // Step 2: If name returns "Other", fall back to types, website, and reviews
+  if (detectedCuisine === 'Other') {
+    const overviewData = [
+      placeDetails.types ? placeDetails.types.join(' ') : '',
+      placeDetails.website || '',
+      placeDetails.reviews ? placeDetails.reviews.map(review => review.text).join(' ') : ''
+    ].join(' ').toLowerCase();
+
+    detectedCuisine = matchCuisineFromKeywords(overviewData);
+  }
+
+  // Cache the detected cuisine for future consistency
+  restaurantCuisineCache[restaurantName] = detectedCuisine;
+
+  return detectedCuisine;
+}
+
+// Helper function to match cuisine keywords in a text
+function matchCuisineFromKeywords(text) {
+  for (const [cuisine, keywords] of Object.entries(cuisineKeywords)) {
+    for (const keyword of keywords) {
+      if (text.includes(keyword)) {
+        return cuisine; // Return the cuisine type if a keyword is matched
       }
     }
-    return 'Other';
   }
+  return 'Other'; // Return 'Other' if no match is found
+}
+
+
+
 
   function initMap() {
     if (navigator.geolocation) {
@@ -219,7 +251,7 @@
                 <div>
                   <h2>${restaurant.name}</h2>
                   <p>Rating: ${rating}</p>
-                  <p>Cuisine: ${inferCuisineType(restaurant.name)}</p>
+                  <p>Cuisine: ${inferCuisineType(placeDetails)}</p>
                   <p>Distance: ${distance.toFixed(2)} mi</p>
                   <p>Address: ${placeDetails.formatted_address}</p>
                   <p>Phone: ${placeDetails.formatted_phone_number || 'Not Available'}</p>
@@ -280,12 +312,35 @@
         });
 
         service.getDetails({ placeId: restaurant.place_id }, (placeDetails, status) => {
-        if (status === google.maps.places.PlacesServiceStatus.OK) {
-          const listItem = document.createElement('li');
-          listItem.textContent = `${restaurant.name} - Rating: ${rating} - Distance: ${distance.toFixed(2)} miles - Cuisine: ${inferCuisineType(restaurant.name)} - Phone: ${placeDetails.formatted_phone_number || 'Not Available'} - Website: ${placeDetails.website || 'Not Available'}`;
-          listElement.appendChild(listItem);
-        }
-      });
+  if (status === google.maps.places.PlacesServiceStatus.OK) {
+    const listItem = document.createElement('li');
+    listItem.innerHTML = `
+      <div style="padding: 10px; border-bottom: 1px solid #ddd;">
+        <h4 style="margin: 0; color: #154c79;">${restaurant.name}</h4>
+        <p style="margin: 5px 0;">
+          <strong>Rating:</strong> ${rating} |
+          <strong>Distance:</strong> ${distance.toFixed(2)} miles |
+          <strong>Cuisine:</strong> ${inferCuisineType(placeDetails)}
+        </p>
+        <p style="margin: 5px 0;">
+          <strong>Phone:</strong> ${placeDetails.formatted_phone_number || 'Not Available'}
+        </p>
+        <p style="margin: 5px 0;">
+
+          ${placeDetails.website
+            ? `<a href="${placeDetails.website}" target="_blank" style="color: #154c79; text-decoration: none;"><strong>Visit Website</strong></a>`
+            : 'Not Available'}
+        </p>
+        <p style="margin: 5px 0;">
+          <a href="https://search.google.com/local/writereview?placeid=${restaurant.place_id}" target="_blank" style="color: #154c79; text-decoration: none;">
+            <strong>Leave a Google Review</strong>
+          </a>
+        </p>
+      </div>`;
+    listElement.appendChild(listItem);
+  }
+});
+
       }
     });
   }
@@ -320,6 +375,8 @@
   });
 
   window.onload = loadGoogleMapsAPI;
+
+
 </script>
 
 {% endblock %}
