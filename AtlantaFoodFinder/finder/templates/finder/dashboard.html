@@ -1,17 +1,73 @@
 {% extends 'finder/base.html' %}
+{% load static %}
 
 {% block content %}
-  <h1>Your Favorite Restaurants</h1>
-  <ul>
-    {% for favorite in favorites %}
-      <li>
-        <strong>{{ favorite.restaurant_name }}</strong><br>
-        Rating: {{ favorite.rating }}<br>
-        Distance: {{ favorite.distance }} mi<br>
-        Address: {{ favorite.address }}<br>
-      </li>
-    {% empty %}
-      <li>You have no favorite restaurants.</li>
-    {% endfor %}
-  </ul>
+<head>
+  <link rel="stylesheet" href="/static/css/dashboard.css">
+</head>
+
+<div class="dashboard-container">
+  <h1>Your Favorited Restaurants</h1>
+  <div class="restaurant-list">
+    <table>
+      <thead>
+        <tr>
+          <th>Select</th>
+          <th>Restaurant Name</th>
+          <th>Rating</th>
+          <th>Distance</th>
+          <!-- Removed Website column -->
+        </tr>
+      </thead>
+      <tbody id="restaurant-tbody">
+        {% for favorite in favorites %}
+        <tr>
+          <td>
+            <input type="checkbox" class="select-restaurant" value="{{ favorite.id }}">
+          </td>
+          <td><strong>{{ favorite.restaurant_name }}</strong></td>
+          <td>{{ favorite.rating }} stars</td>
+          <td>{{ favorite.distance }} mi</td>
+          <!-- Removed the Website td -->
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="4">No favorited restaurants found.</td> <!-- Adjusted colspan to 4 -->
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <button id="delete-selected" class="action-btn">Delete Selected</button>
+</div>
+
+<script>
+  document.getElementById('delete-selected').addEventListener('click', () => {
+    const selectedCheckboxes = document.querySelectorAll('.select-restaurant:checked');
+    const idsToDelete = Array.from(selectedCheckboxes).map(cb => cb.value).filter(id => id);
+
+    if (idsToDelete.length > 0) {
+      fetch("{% url 'delete_favorites' %}", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({ restaurant_ids: idsToDelete })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 'success') {
+          alert('Selected restaurants deleted successfully.');
+          location.reload(); // Refresh the page to see changes
+        } else {
+          alert(data.message);
+        }
+      })
+      .catch(error => console.error('Error:', error));
+    } else {
+      alert('Please select at least one restaurant to delete.');
+    }
+  });
+</script>
 {% endblock %}

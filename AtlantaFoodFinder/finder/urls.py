@@ -7,4 +7,5 @@ urlpatterns = [
     path('finder/dashboard/', views.dashboard, name='dashboard'),
 
     path('add-favorite/', views.add_favorite, name='add_favorite'),
+    path('delete_favorites/', views.delete_favorites, name='delete_favorites'),
 ]

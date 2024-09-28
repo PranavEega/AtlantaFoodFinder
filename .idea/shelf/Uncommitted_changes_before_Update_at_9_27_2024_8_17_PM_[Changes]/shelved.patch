@@ -1,0 +1,313 @@
+Index: AtlantaFoodFinder/finder/templates/finder/dashboard.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{% extends 'finder/base.html' %}\r\n\r\n{% block content %}\r\n  <h1>Your Favorite Restaurants</h1>\r\n  <ul>\r\n    {% for favorite in favorites %}\r\n      <li>\r\n        <strong>{{ favorite.restaurant_name }}</strong><br>\r\n        Rating: {{ favorite.rating }}<br>\r\n        Distance: {{ favorite.distance }} mi<br>\r\n        Address: {{ favorite.address }}<br>\r\n      </li>\r\n    {% empty %}\r\n      <li>You have no favorite restaurants.</li>\r\n    {% endfor %}\r\n  </ul>\r\n{% endblock %}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/AtlantaFoodFinder/finder/templates/finder/dashboard.html b/AtlantaFoodFinder/finder/templates/finder/dashboard.html
+--- a/AtlantaFoodFinder/finder/templates/finder/dashboard.html	(revision 6919d36cc81508b39435595dc4b146aee70bc754)
++++ b/AtlantaFoodFinder/finder/templates/finder/dashboard.html	(date 1727482264807)
+@@ -1,17 +1,77 @@
+ {% extends 'finder/base.html' %}
++{% load static %}
+ 
+ {% block content %}
+-  <h1>Your Favorite Restaurants</h1>
+-  <ul>
+-    {% for favorite in favorites %}
+-      <li>
+-        <strong>{{ favorite.restaurant_name }}</strong><br>
+-        Rating: {{ favorite.rating }}<br>
+-        Distance: {{ favorite.distance }} mi<br>
+-        Address: {{ favorite.address }}<br>
+-      </li>
+-    {% empty %}
+-      <li>You have no favorite restaurants.</li>
+-    {% endfor %}
+-  </ul>
++<head>
++  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
++</head>
++
++<div class="dashboard-container">
++  <h1>Your Favorited Restaurants</h1>
++  <div class="restaurant-list">
++    <table>
++      <thead>
++        <tr>
++          <th>Select</th>
++          <th>Restaurant Name</th>
++          <th>Rating</th>
++          <th>Distance</th>
++          <th>Phone Number</th>  <!-- Changed from Website to Phone Number -->
++        </tr>
++      </thead>
++      <tbody id="restaurant-tbody">
++        {% for favorite in favorites %}
++        <tr>
++          <td>
++            <input type="checkbox" class="select-restaurant" value="{{ favorite.id }}">
++          </td>
++          <td><strong>{{ favorite.restaurant_name }}</strong></td>
++          <td>{{ favorite.rating }} stars</td>
++          <td>{{ favorite.distance }} mi</td>
++          <td>{{ favorite.phone_number }}</td>  <!-- Display phone number -->
++        </tr>
++        {% empty %}
++        <tr>
++          <td colspan="5">No favorited restaurants found.</td>
++        </tr>
++        {% endfor %}
++      </tbody>
++    </table>
++  </div>
++  <button id="delete-selected" class="action-btn">Delete Selected</button>
++</div>
++
++<script>
++  document.getElementById('delete-selected').addEventListener('click', () => {
++    const selectedCheckboxes = document.querySelectorAll('.select-restaurant:checked');
++    const idsToDelete = Array.from(selectedCheckboxes).map(cb => cb.value).filter(id => id);
++    
++    if (idsToDelete.length > 0) {
++      fetch("{% url 'delete_favorites' %}", {
++        method: 'POST',
++        headers: {
++          'Content-Type': 'application/json',
++          'X-CSRFToken': '{{ csrf_token }}'
++        },
++        body: JSON.stringify({ restaurant_ids: idsToDelete })
++      })
++      .then(response => response.json())
++      .then(data => {
++        if (data.status === 'success') {
++          alert('Selected restaurants deleted successfully.');
++          location.reload(); // Refresh the page to see changes
++        } else {
++          alert(data.message);
++        }
++      })
++      .catch(error => console.error('Error:', error));
++    } else {
++      alert('Please select at least one restaurant to delete.');
++    }
++  });
++</script>
+ {% endblock %}
++
++
++
++
+Index: AtlantaFoodFinder/finder/models.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from django.db import models\r\nfrom django.contrib.auth.models import User\r\n\r\n\r\nclass Favorite(models.Model):\r\n    user = models.ForeignKey(User, on_delete=models.CASCADE)  # Ensures that each favorite is tied to a user\r\n    restaurant_name = models.CharField(max_length=255)\r\n    address = models.CharField(max_length=255)  # Ensure the address is stored\r\n    rating = models.DecimalField(max_digits=3, decimal_places=1)\r\n    distance = models.DecimalField(max_digits=5, decimal_places=2)\r\n\r\n    def __str__(self):\r\n        return f\"{self.restaurant_name} ({self.address}) - {self.user.username}\"\r\n# Create your models here.\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/AtlantaFoodFinder/finder/models.py b/AtlantaFoodFinder/finder/models.py
+--- a/AtlantaFoodFinder/finder/models.py	(revision 6919d36cc81508b39435595dc4b146aee70bc754)
++++ b/AtlantaFoodFinder/finder/models.py	(date 1727482368883)
+@@ -8,6 +8,7 @@
+     address = models.CharField(max_length=255)  # Ensure the address is stored
+     rating = models.DecimalField(max_digits=3, decimal_places=1)
+     distance = models.DecimalField(max_digits=5, decimal_places=2)
++    phone_number = models.CharField(max_length=20, blank=True, null=True)
+ 
+     def __str__(self):
+         return f"{self.restaurant_name} ({self.address}) - {self.user.username}"
+Index: AtlantaFoodFinder/finder/urls.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from django.urls import path\r\nfrom . import views\r\n\r\nurlpatterns = [\r\n    path('', views.home, name='home'),\r\n    path('search/', views.search, name='search'),\r\n    path('finder/dashboard/', views.dashboard, name='dashboard'),\r\n\r\n    path('add-favorite/', views.add_favorite, name='add_favorite'),\r\n]
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/AtlantaFoodFinder/finder/urls.py b/AtlantaFoodFinder/finder/urls.py
+--- a/AtlantaFoodFinder/finder/urls.py	(revision 6919d36cc81508b39435595dc4b146aee70bc754)
++++ b/AtlantaFoodFinder/finder/urls.py	(date 1727480687763)
+@@ -7,4 +7,6 @@
+     path('finder/dashboard/', views.dashboard, name='dashboard'),
+ 
+     path('add-favorite/', views.add_favorite, name='add_favorite'),
++
++    path('delete_favorites/', views.delete_favorites, name='delete_favorites'),
+ ]
+\ No newline at end of file
+Index: AtlantaFoodFinder/finder/views.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from unittest import result\r\n\r\nimport requests\r\nfrom django.contrib.auth.decorators import login_required\r\nfrom django.shortcuts import render\r\nfrom django.conf import settings\r\nfrom django.views.decorators.cache import cache_control\r\n\r\n\r\ndef home(request):\r\n    return render(request, 'finder/home.html')\r\n\r\n'''\r\n@login_required(login_url='my-login')\r\n@cache_control(no_cache = True, must_revalidate = True, no_store = True)\r\n\r\n'''\r\ndef search(request):\r\n    if request.method == 'POST':\r\n        location = '33.7488, -84.3877'\r\n\r\n        # Use Google Places API to search for nearby restaurants\r\n        url = f\"https://maps.googleapis.com/maps/api/place/nearbysearch/json\"\r\n        params = {\r\n            'location': location,\r\n            'type': 'restaurant',\r\n            'key': settings.GOOGLE_MAPS_API_KEY\r\n        }\r\n\r\n        response = requests.get(url, params=params)\r\n        results = response.json().get('results', [])\r\n\r\n\r\n        context = {\r\n            'results': results,\r\n            'api_key': settings.GOOGLE_MAPS_API_KEY,\r\n            'location': location,\r\n        }\r\n        return render(request, 'finder/results.html', context)\r\n\r\n    return render(request, 'finder/home.html')\r\n\r\n\r\nfrom django.shortcuts import render, redirect\r\nfrom django.http import JsonResponse\r\nfrom django.contrib.auth.decorators import login_required\r\nfrom .models import Favorite\r\n\r\n\r\n@login_required(login_url='my-login')\r\ndef add_favorite(request):\r\n    if request.method == 'POST':\r\n        user = request.user  # Get the logged-in user\r\n        restaurant_name = request.POST.get('restaurant_name')\r\n        rating = request.POST.get('rating')\r\n        distance = request.POST.get('distance')\r\n        address = request.POST.get('address')\r\n\r\n        # Check if the restaurant with the same name and address is already favorited by the user\r\n        if Favorite.objects.filter(user=user, restaurant_name=restaurant_name, address=address).exists():\r\n            return JsonResponse({'status': 'error', 'message': 'This restaurant is already in your favorites.'})\r\n\r\n        # Create and save the favorite restaurant for this user\r\n        favorite = Favorite.objects.create(\r\n            user=user,\r\n            restaurant_name=restaurant_name,\r\n            rating=rating,\r\n            distance=distance,\r\n            address=address\r\n        )\r\n\r\n        return JsonResponse({'status': 'success', 'message': 'Restaurant added to favorites'})\r\n\r\n    return JsonResponse({'status': 'error', 'message': 'Invalid request'})\r\n@login_required(login_url='my-login')\r\ndef dashboard(request):\r\n    favorites = Favorite.objects.filter(user=request.user)\r\n    return render(request, 'finder/dashboard.html', {'favorites': favorites})\r\n\r\n\r\nfrom django.shortcuts import render\r\n\r\n# Create your views here.\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/AtlantaFoodFinder/finder/views.py b/AtlantaFoodFinder/finder/views.py
+--- a/AtlantaFoodFinder/finder/views.py	(revision 6919d36cc81508b39435595dc4b146aee70bc754)
++++ b/AtlantaFoodFinder/finder/views.py	(date 1727481237535)
+@@ -5,6 +5,7 @@
+ from django.shortcuts import render
+ from django.conf import settings
+ from django.views.decorators.cache import cache_control
++from django.views.decorators.csrf import csrf_exempt
+ 
+ 
+ def home(request):
+@@ -79,5 +80,25 @@
+ 
+ 
+ from django.shortcuts import render
++from django.http import JsonResponse
++from django.views.decorators.csrf import csrf_exempt
++from .models import Favorite  # Adjust this according to your model name
++import json
++
++@csrf_exempt  # Use this decorator if you need to exempt the view from CSRF verification
++def delete_favorites(request):
++    if request.method == 'POST':
++        try:
++            # Parse the JSON data
++            data = json.loads(request.body)
++            restaurant_ids = data.get('restaurant_ids', [])
++
++            # Delete the selected favorite restaurants
++            Favorite.objects.filter(id__in=restaurant_ids).delete()
++
++            return JsonResponse({'status': 'success'})
++        except Exception as e:
++            return JsonResponse({'status': 'error', 'message': str(e)})
++    return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
+ 
+ # Create your views here.
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"6ce0dd09-477a-499a-bae7-5f9bdacad7cd\" name=\"Changes\" comment=\"first commit for home page, test push on 9/17/2024\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/AtlantaFoodFinder/db.sqlite3\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/AtlantaFoodFinder/db.sqlite3\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/AtlantaFoodFinder/finder/templates/finder/results.html\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/AtlantaFoodFinder/finder/templates/finder/results.html\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"ChangesViewManager\">\r\n    <option name=\"groupingKeys\">\r\n      <option value=\"directory\" />\r\n    </option>\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"HTML File\" />\r\n        <option value=\"Python Script\" />\r\n        <option value=\"CSS File\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"GitHubPullRequestSearchHistory\">{\r\n  &quot;history&quot;: [\r\n    {\r\n      &quot;state&quot;: &quot;OPEN&quot;,\r\n      &quot;author&quot;: &quot;eshan1jaffar&quot;\r\n    }\r\n  ],\r\n  &quot;lastFilter&quot;: {\r\n    &quot;state&quot;: &quot;OPEN&quot;,\r\n    &quot;author&quot;: &quot;eshan1jaffar&quot;\r\n  }\r\n}</component>\r\n  <component name=\"GithubPullRequestsUISettings\">{\r\n  &quot;selectedUrlAndAccountId&quot;: {\r\n    &quot;url&quot;: &quot;https://github.com/PranavEega/AtlantaFoodFinder.git&quot;,\r\n    &quot;accountId&quot;: &quot;9c198e46-08e7-49dc-98c8-3c4789907df6&quot;\r\n  }\r\n}</component>\r\n  <component name=\"ProblemsViewState\">\r\n    <option name=\"selectedTabId\" value=\"CurrentFile\" />\r\n  </component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;associatedIndex&quot;: 8\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"2mCs2vZMSuDbalhslREri9WnLDh\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">{\r\n  &quot;keyToString&quot;: {\r\n    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,\r\n    &quot;Django Server.Unnamed.executor&quot;: &quot;Run&quot;,\r\n    &quot;JavaScript Debug.homePage.html.executor&quot;: &quot;Run&quot;,\r\n    &quot;Python.manage.executor&quot;: &quot;Run&quot;,\r\n    &quot;Python.urls.executor&quot;: &quot;Run&quot;,\r\n    &quot;RunOnceActivity.OpenDjangoStructureViewOnStart&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\r\n    &quot;django.template.preview.state&quot;: &quot;SHOW_EDITOR&quot;,\r\n    &quot;git-widget-placeholder&quot;: &quot;main&quot;,\r\n    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,\r\n    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,\r\n    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,\r\n    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,\r\n    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,\r\n    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;\r\n  }\r\n}</component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"MoveFile.RECENT_KEYS\">\r\n      <recent name=\"C:\\Users\\Roohi\\AtlantaFoodFinder\\AtlantaFoodFinder\\homePage\\static\\css\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"RunManager\">\r\n    <configuration name=\"Unnamed\" type=\"Python.DjangoServer\" factoryName=\"Django server\" nameIsGenerated=\"true\">\r\n      <module name=\"AtlantaFoodFinder\" />\r\n      <option name=\"ENV_FILES\" value=\"\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n        <env name=\"DJANGO_SETTINGS_MODULE\" value=\"AtlantaFoodFinder.settings\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"false\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <option name=\"launchJavascriptDebuger\" value=\"false\" />\r\n      <option name=\"port\" value=\"8000\" />\r\n      <option name=\"host\" value=\"localhost\" />\r\n      <option name=\"additionalOptions\" value=\"\" />\r\n      <option name=\"browserUrl\" value=\"\" />\r\n      <option name=\"runTestServer\" value=\"false\" />\r\n      <option name=\"runNoReload\" value=\"false\" />\r\n      <option name=\"useCustomRunCommand\" value=\"false\" />\r\n      <option name=\"customRunCommand\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n  </component>\r\n  <component name=\"SharedIndexes\">\r\n    <attachedChunks>\r\n      <set>\r\n        <option value=\"bundled-js-predefined-d6986cc7102b-7c0b70fcd90d-JavaScript-PY-242.21829.153\" />\r\n        <option value=\"bundled-python-sdk-464836ebc622-b74155a9e76b-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-242.21829.153\" />\r\n      </set>\r\n    </attachedChunks>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task id=\"LOCAL-00001\" summary=\"first commit for home page, test push on 9/17/2024\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1726590220058</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1726590220058</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"first commit for home page, test push on 9/17/2024\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1726590337280</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1726590337280</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00003\" summary=\"first commit for home page, test push on 9/17/2024\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1726590873404</created>\r\n      <option name=\"number\" value=\"00003\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1726590873404</updated>\r\n    </task>\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"6ce0dd09-477a-499a-bae7-5f9bdacad7cd\" name=\"Changes\" comment=\"first commit for home page, test push on 9/17/2024\" />\r\n      <created>1726591688352</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1726591688352</updated>\r\n      <workItem from=\"1726591689506\" duration=\"7399000\" />\r\n      <workItem from=\"1726797866026\" duration=\"5846000\" />\r\n      <workItem from=\"1727109584401\" duration=\"4271000\" />\r\n      <workItem from=\"1727193362334\" duration=\"151000\" />\r\n      <workItem from=\"1727194151065\" duration=\"3484000\" />\r\n      <workItem from=\"1727475713590\" duration=\"2952000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00004\" summary=\"first commit for home page, test push on 9/17/2024\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1727121082683</created>\r\n      <option name=\"number\" value=\"00004\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1727121082683</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00005\" summary=\"first commit for home page, test push on 9/17/2024\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1727121109370</created>\r\n      <option name=\"number\" value=\"00005\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00005\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1727121109370</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00006\" summary=\"first commit for home page, test push on 9/17/2024\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1727121112251</created>\r\n      <option name=\"number\" value=\"00006\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00006\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1727121112251</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00007\" summary=\"first commit for home page, test push on 9/17/2024\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1727121190591</created>\r\n      <option name=\"number\" value=\"00007\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00007\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1727121190591</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00008\" summary=\"first commit for home page, test push on 9/17/2024\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1727123932071</created>\r\n      <option name=\"number\" value=\"00008\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00008\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1727123932071</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00009\" summary=\"first commit for home page, test push on 9/17/2024\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1727151392312</created>\r\n      <option name=\"number\" value=\"00009\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00009\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1727151392312</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00010\" summary=\"first commit for home page, test push on 9/17/2024\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1727151937236</created>\r\n      <option name=\"number\" value=\"00010\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00010\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1727151937236</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00011\" summary=\"first commit for home page, test push on 9/17/2024\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1727152176945</created>\r\n      <option name=\"number\" value=\"00011\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00011\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1727152176945</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00012\" summary=\"first commit for home page, test push on 9/17/2024\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1727194180663</created>\r\n      <option name=\"number\" value=\"00012\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00012\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1727194180663</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00013\" summary=\"first commit for home page, test push on 9/17/2024\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1727194197758</created>\r\n      <option name=\"number\" value=\"00013\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00013\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1727194197758</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00014\" summary=\"first commit for home page, test push on 9/17/2024\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1727196623824</created>\r\n      <option name=\"number\" value=\"00014\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00014\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1727196623824</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00015\" summary=\"first commit for home page, test push on 9/17/2024\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1727198928537</created>\r\n      <option name=\"number\" value=\"00015\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00015\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1727198928537</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00016\" summary=\"first commit for home page, test push on 9/17/2024\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1727198939423</created>\r\n      <option name=\"number\" value=\"00016\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00016\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1727198939423</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00017\" summary=\"first commit for home page, test push on 9/17/2024\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1727297561462</created>\r\n      <option name=\"number\" value=\"00017\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00017\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1727297561462</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00018\" summary=\"first commit for home page, test push on 9/17/2024\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1727297575768</created>\r\n      <option name=\"number\" value=\"00018\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00018\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1727297575768</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00019\" summary=\"first commit for home page, test push on 9/17/2024\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1727477262811</created>\r\n      <option name=\"number\" value=\"00019\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00019\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1727477262811</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"20\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"added keywords for cuisine type\" />\r\n    <MESSAGE value=\"first commit for home page, test push on 9/17/2024\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"first commit for home page, test push on 9/17/2024\" />\r\n  </component>\r\n  <component name=\"com.intellij.coverage.CoverageDataManagerImpl\">\r\n    <SUITE FILE_PATH=\"coverage/AtlantaFoodFinder$manage.coverage\" NAME=\"manage Coverage Results\" MODIFIED=\"1726591812700\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$/AtlantaFoodFinder\" />\r\n    <SUITE FILE_PATH=\"coverage/AtlantaFoodFinder$urls.coverage\" NAME=\"urls Coverage Results\" MODIFIED=\"1726689269147\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$/AtlantaFoodFinder/homePage\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 6919d36cc81508b39435595dc4b146aee70bc754)
++++ b/.idea/workspace.xml	(date 1727482342580)
+@@ -5,9 +5,13 @@
+   </component>
+   <component name="ChangeListManager">
+     <list default="true" id="6ce0dd09-477a-499a-bae7-5f9bdacad7cd" name="Changes" comment="first commit for home page, test push on 9/17/2024">
++      <change afterPath="$PROJECT_DIR$/AtlantaFoodFinder/finder/static/css/dashboard.css" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/AtlantaFoodFinder/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/AtlantaFoodFinder/db.sqlite3" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/AtlantaFoodFinder/finder/templates/finder/results.html" beforeDir="false" afterPath="$PROJECT_DIR$/AtlantaFoodFinder/finder/templates/finder/results.html" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/AtlantaFoodFinder/finder/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/AtlantaFoodFinder/finder/models.py" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/AtlantaFoodFinder/finder/templates/finder/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/AtlantaFoodFinder/finder/templates/finder/dashboard.html" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/AtlantaFoodFinder/finder/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/AtlantaFoodFinder/finder/urls.py" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/AtlantaFoodFinder/finder/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/AtlantaFoodFinder/finder/views.py" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -157,7 +161,7 @@
+       <workItem from="1727109584401" duration="4271000" />
+       <workItem from="1727193362334" duration="151000" />
+       <workItem from="1727194151065" duration="3484000" />
+-      <workItem from="1727475713590" duration="2952000" />
++      <workItem from="1727475713590" duration="6587000" />
+     </task>
+     <task id="LOCAL-00004" summary="first commit for home page, test push on 9/17/2024">
+       <option name="closed" value="true" />
+@@ -287,7 +291,15 @@
+       <option name="project" value="LOCAL" />
+       <updated>1727477262811</updated>
+     </task>
+-    <option name="localTasksCounter" value="20" />
++    <task id="LOCAL-00020" summary="first commit for home page, test push on 9/17/2024">
++      <option name="closed" value="true" />
++      <created>1727478744246</created>
++      <option name="number" value="00020" />
++      <option name="presentableId" value="LOCAL-00020" />
++      <option name="project" value="LOCAL" />
++      <updated>1727478744246</updated>
++    </task>
++    <option name="localTasksCounter" value="21" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
+Index: AtlantaFoodFinder/finder/static/css/dashboard.css
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/AtlantaFoodFinder/finder/static/css/dashboard.css b/AtlantaFoodFinder/finder/static/css/dashboard.css
+new file mode 100644
+--- /dev/null	(date 1727480345748)
++++ b/AtlantaFoodFinder/finder/static/css/dashboard.css	(date 1727480345748)
+@@ -0,0 +1,71 @@
++body {
++  font-family: Arial, sans-serif;
++  background-color: #f4f4f4;
++}
++
++.dashboard-container {
++  max-width: 800px;
++  margin: 30px auto;
++  padding: 20px;
++  background: white;
++  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
++  border-radius: 8px;
++}
++
++h1 {
++  text-align: center;
++  color: #333;
++}
++
++.restaurant-list {
++  margin-top: 20px;
++}
++
++table {
++  width: 100%;
++  border-collapse: collapse;
++}
++
++th, td {
++  padding: 12px;
++  text-align: left;
++  border-bottom: 1px solid #ddd;
++}
++
++th {
++  background-color: #f2f2f2;
++}
++
++tr:hover {
++  background-color: #f9f9f9;
++}
++
++.action-btn {
++  display: block;
++  width: 100%;
++  padding: 10px;
++  background-color: #28a745;
++  color: white;
++  border: none;
++  border-radius: 5px;
++  cursor: pointer;
++  font-size: 16px;
++  margin-top: 20px;
++}
++
++.action-btn:hover {
++  background-color: #218838;
++}
++
++.delete-btn {
++  background-color: #dc3545;
++  color: white;
++  border: none;
++  border-radius: 5px;
++  cursor: pointer;
++  padding: 5px 10px;
++}
++
++.delete-btn:hover {
++  background-color: #c82333;
++}
