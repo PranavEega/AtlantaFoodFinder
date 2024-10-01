@@ -19,7 +19,7 @@ from django.urls import path, include
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('secret/', admin.site.urls),
     path('', include('homePage.urls')),
     path('', include('finder.urls')),
     path('password_reset', auth_views.PasswordResetView.as_view(), name='password_reset'),
