@@ -4,15 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6ce0dd09-477a-499a-bae7-5f9bdacad7cd" name="Changes" comment="first commit for home page, test push on 9/17/2024">
-      <change afterPath="$PROJECT_DIR$/AtlantaFoodFinder/finder/static/css/dashboard.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AtlantaFoodFinder/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/AtlantaFoodFinder/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AtlantaFoodFinder/finder/templates/finder/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/AtlantaFoodFinder/finder/templates/finder/dashboard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AtlantaFoodFinder/finder/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/AtlantaFoodFinder/finder/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AtlantaFoodFinder/finder/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/AtlantaFoodFinder/finder/views.py" afterDir="false" />
-    </list>
+    <list default="true" id="6ce0dd09-477a-499a-bae7-5f9bdacad7cd" name="Changes" comment="first commit for home page, test push on 9/17/2024" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -72,26 +64,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultHtmlFileTemplate": "HTML File",
-    "Django Server.Unnamed.executor": "Run",
-    "JavaScript Debug.homePage.html.executor": "Run",
-    "Python.manage.executor": "Run",
-    "Python.urls.executor": "Run",
-    "RunOnceActivity.OpenDjangoStructureViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.pycharm.django.structure.promotion.once.per.project": "true",
-    "django.template.preview.state": "SHOW_EDITOR",
-    "git-widget-placeholder": "main",
-    "list.type.of.created.stylesheet": "CSS",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;Django Server.Unnamed.executor&quot;: &quot;Run&quot;,
+    &quot;JavaScript Debug.homePage.html.executor&quot;: &quot;Run&quot;,
+    &quot;Python.manage.executor&quot;: &quot;Run&quot;,
+    &quot;Python.urls.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenDjangoStructureViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.pycharm.django.structure.promotion.once.per.project&quot;: &quot;true&quot;,
+    &quot;django.template.preview.state&quot;: &quot;SHOW_EDITOR&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Roohi\AtlantaFoodFinder\AtlantaFoodFinder\homePage\static\css" />
@@ -127,8 +119,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-7c0b70fcd90d-JavaScript-PY-242.21829.153" />
-        <option value="bundled-python-sdk-464836ebc622-b74155a9e76b-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-242.21829.153" />
+        <option value="bundled-js-predefined-d6986cc7102b-410509235cf1-JavaScript-PY-242.20224.428" />
+        <option value="bundled-python-sdk-80e8e15d2b92-39cff9de6eef-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-242.20224.428" />
       </set>
     </attachedChunks>
   </component>
@@ -170,6 +162,7 @@
       <workItem from="1727193362334" duration="151000" />
       <workItem from="1727194151065" duration="3484000" />
       <workItem from="1727475713590" duration="6894000" />
+      <workItem from="1727817474460" duration="28000" />
     </task>
     <task id="LOCAL-00004" summary="first commit for home page, test push on 9/17/2024">
       <option name="closed" value="true" />
