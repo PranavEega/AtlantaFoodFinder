@@ -61,5 +61,19 @@ def user_logout(request):
     logout(request)
     return redirect('home')
 
+from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView
+from django.urls import reverse_lazy
+
+
+class CustomPasswordResetView(PasswordResetView):
+    template_name = 'homePage/password_reset.html'
+    success_url = reverse_lazy('password_reset_done')
+
+class CustomPasswordResetDoneView(PasswordResetDoneView):
+    template_name = 'homePage/password_reset_done.html'
+
+class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+    template_name = 'homePage/password_reset_confirm.html'  # Your custom template
+    success_url = reverse_lazy('my-login')
 
 
